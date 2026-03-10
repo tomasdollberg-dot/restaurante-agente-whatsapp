@@ -27,10 +27,13 @@ export default function LoginPage() {
     console.log('[LOGIN] signInWithPassword error:', error)
 
     if (error) {
-      if (error.message.toLowerCase().includes('email not confirmed')) {
+      const m = error.message.toLowerCase()
+      if (m.includes('email not confirmed')) {
         setError('Debes confirmar tu email antes de entrar. Revisa tu bandeja de entrada.')
+      } else if (m.includes('invalid login credentials') || m.includes('invalid email or password')) {
+        setError('Email o contraseña incorrectos.')
       } else {
-        setError('Email o contraseña incorrectos')
+        setError('Error inesperado. Inténtalo de nuevo.')
       }
       setLoading(false)
       return

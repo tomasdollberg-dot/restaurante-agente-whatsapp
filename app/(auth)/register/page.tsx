@@ -9,6 +9,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
+function mapAuthError(message: string): string {
+  const m = message.toLowerCase()
+  if (m.includes('user already registered') || m.includes('already registered')) return 'Ya existe una cuenta con este email.'
+  if (m.includes('password should be at least')) return 'La contraseña debe tener al menos 6 caracteres.'
+  if (m.includes('invalid email')) return 'El formato del email no es válido.'
+  if (m.includes('email not confirmed')) return 'Debes confirmar tu email antes de entrar.'
+  return 'Error inesperado. Inténtalo de nuevo.'
+}
+
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -32,27 +41,13 @@ export default function RegisterPage() {
 
     const supabase = createClient()
 
-    // 1. Crear usuario en Supabase Auth
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
     })
 
-    if (signUpError || !data.user) {
-      setError(signUpError?.message ?? 'Error al crear la cuenta')
-      setLoading(false)
-      return
-    }
-
-    // 2. Crear el restaurante ligado al nuevo usuario
-    const { error: restaurantError } = await supabase.from('restaurants').insert({
-      owner_id: data.user.id,
-      name: form.restaurantName,
-      owner_phone: form.ownerPhone,
-    } as never)
-
-    if (restaurantError) {
-      setError('Error al crear el restaurante. Intenta de nuevo.')
+    if (signUpError) {
+      setError(mapAuthError(signUpError.message))
       setLoading(false)
       return
     }
