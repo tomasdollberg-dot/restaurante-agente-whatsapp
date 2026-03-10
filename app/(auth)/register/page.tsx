@@ -58,22 +58,107 @@ export default function RegisterPage() {
 
   if (registered) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardContent className="pt-8 pb-8 space-y-4">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
-              <span className="text-3xl">📬</span>
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">Revisa tu bandeja de entrada</h2>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Te hemos enviado un email de confirmación a <strong>{form.email}</strong>.
-              Una vez confirmado podrás acceder a tu panel.
+      <div
+        className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 45%, #2d1f08 100%)' }}
+      >
+        {/* Decorative circles */}
+        <div
+          className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.35) 0%, transparent 70%)' }}
+        />
+        <div
+          className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full opacity-15"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.3) 0%, transparent 70%)' }}
+        />
+
+        <div className="relative w-full max-w-sm flex flex-col items-center text-center gap-6">
+          {/* Logo */}
+          <p
+            className="text-xs font-bold tracking-[0.35em] uppercase"
+            style={{ color: '#b8922a' }}
+          >
+            SOLERA
+          </p>
+
+          {/* Icon */}
+          <div
+            className="flex h-20 w-20 items-center justify-center rounded-2xl text-4xl"
+            style={{ border: '1px solid rgba(184,146,42,0.25)', backgroundColor: 'rgba(184,146,42,0.06)' }}
+          >
+            ✉️
+          </div>
+
+          {/* Title */}
+          <div className="space-y-2">
+            <h1
+              className="text-3xl leading-tight"
+              style={{ color: '#f5f0e8', fontWeight: 800 }}
+            >
+              Ya casi estás dentro 🎉
+            </h1>
+            <p className="text-sm" style={{ color: 'rgba(245,240,232,0.55)' }}>
+              Hemos enviado un enlace de confirmación a
             </p>
-            <p className="text-xs text-gray-400">
-              ¿No lo encuentras? Revisa la carpeta de spam.
+          </div>
+
+          {/* Email pill */}
+          <div
+            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+            style={{
+              backgroundColor: 'rgba(184,146,42,0.10)',
+              border: '1px solid rgba(184,146,42,0.3)',
+            }}
+          >
+            <span style={{ color: '#b8922a' }}>✉</span>
+            <span style={{ color: '#f5f0e8' }}>{form.email}</span>
+          </div>
+
+          {/* Steps card */}
+          <div
+            className="w-full rounded-2xl p-5 text-left space-y-4"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.07)',
+            }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#b8922a' }}>
+              A continuación
             </p>
-          </CardContent>
-        </Card>
+            {[
+              'Abre el email que te enviamos',
+              'Haz clic en el enlace de confirmación',
+              'Configura tu restaurante',
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                  style={{ backgroundColor: 'rgba(184,146,42,0.2)', color: '#b8922a' }}
+                >
+                  {i + 1}
+                </span>
+                <p className="text-sm" style={{ color: 'rgba(245,240,232,0.7)' }}>
+                  {step}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer resend */}
+          <p className="text-xs" style={{ color: 'rgba(245,240,232,0.4)' }}>
+            ¿No llegó?{' '}
+            <button
+              onClick={async () => {
+                const supabase = createClient()
+                await supabase.auth.resend({ type: 'signup', email: form.email })
+              }}
+              className="font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"
+              style={{ color: '#b8922a' }}
+            >
+              Reenviar email
+            </button>
+          </p>
+        </div>
       </div>
     )
   }
