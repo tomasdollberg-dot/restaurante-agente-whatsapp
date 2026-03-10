@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { saveHours } from '@/app/(dashboard)/dashboard/hours/actions'
 import type { RestaurantHours } from '@/lib/supabase/types'
 
@@ -25,6 +23,22 @@ function buildInitialHours(existing: RestaurantHours[]): HourRow[] {
       is_closed: found?.is_closed ?? false,
     }
   })
+}
+
+function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(!enabled)}
+      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none shrink-0"
+      style={{ backgroundColor: enabled ? '#16a34a' : '#d1d5db' }}
+    >
+      <span
+        className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200"
+        style={{ transform: enabled ? 'translateX(1.375rem)' : 'translateX(0.25rem)' }}
+      />
+    </button>
+  )
 }
 
 export function HoursForm({ existing }: { existing: RestaurantHours[] }) {
@@ -61,67 +75,79 @@ export function HoursForm({ existing }: { existing: RestaurantHours[] }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+        <h1 className="text-xl font-bold text-gray-900">Horarios</h1>
+        <p className="text-sm text-gray-500">Define los horarios de apertura y cierre</p>
+      </div>
+
       {message && (
-        <div className={`rounded-md px-4 py-3 text-sm ${
-          message.type === 'success'
-            ? 'bg-green-50 text-green-800'
-            : 'bg-destructive/10 text-destructive'
-        }`}>
+        <div
+          className={`mb-4 rounded-xl px-4 py-3 text-sm ${
+            message.type === 'success'
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
+          }`}
+        >
           {message.text}
         </div>
       )}
 
-      <div className="rounded-lg border bg-white overflow-hidden">
-        <div className="grid grid-cols-[120px_1fr_1fr_100px] gap-4 border-b bg-gray-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <span>Día</span>
-          <span>Apertura</span>
-          <span>Cierre</span>
-          <span>Cerrado</span>
-        </div>
-
-        {hours.map((h) => (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-4">
+        {hours.map((h, idx) => (
           <div
             key={h.day_of_week}
-            className="grid grid-cols-[120px_1fr_1fr_100px] items-center gap-4 border-b px-6 py-4 last:border-b-0"
+            className={`px-4 py-3 ${idx < hours.length - 1 ? 'border-b border-gray-100' : ''}`}
           >
-            <span className="font-medium">{DAYS[h.day_of_week]}</span>
-
-            <Input
-              type="time"
-              value={h.open_time}
-              onChange={(e) => update(h.day_of_week, 'open_time', e.target.value)}
-              disabled={h.is_closed}
-              className="disabled:opacity-40"
-            />
-
-            <Input
-              type="time"
-              value={h.close_time}
-              onChange={(e) => update(h.day_of_week, 'close_time', e.target.value)}
-              disabled={h.is_closed}
-              className="disabled:opacity-40"
-            />
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id={`closed-${h.day_of_week}`}
-                className="h-4 w-4 rounded border-gray-300"
-                checked={h.is_closed}
-                onChange={(e) => update(h.day_of_week, 'is_closed', e.target.checked)}
-              />
-              <label htmlFor={`closed-${h.day_of_week}`} className="text-sm text-muted-foreground">
-                Cerrado
-              </label>
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-semibold text-sm text-gray-900">{DAYS[h.day_of_week]}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400">{h.is_closed ? 'Cerrado' : 'Abierto'}</span>
+                <Toggle
+                  enabled={!h.is_closed}
+                  onChange={(v) => update(h.day_of_week, 'is_closed', !v)}
+                />
+              </div>
             </div>
+
+            {!h.is_closed && (
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <p className="text-xs text-gray-400 mb-1">Apertura</p>
+                  <input
+                    type="time"
+                    value={h.open_time}
+                    onChange={(e) => update(h.day_of_week, 'open_time', e.target.value)}
+                    className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-gray-50"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs text-gray-400 mb-1">Cierre</p>
+                  <input
+                    type="time"
+                    value={h.close_time}
+                    onChange={(e) => update(h.day_of_week, 'close_time', e.target.value)}
+                    className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 bg-gray-50"
+                  />
+                </div>
+              </div>
+            )}
+
+            {h.is_closed && (
+              <p className="text-xs text-gray-400">Cerrado este día</p>
+            )}
           </div>
         ))}
       </div>
 
-      <Button type="submit" disabled={loading}>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded-xl py-3 text-sm font-bold text-white disabled:opacity-60 transition-opacity"
+        style={{ backgroundColor: '#b8922a' }}
+      >
         {loading ? 'Guardando...' : 'Guardar horarios'}
-      </Button>
+      </button>
     </form>
   )
 }

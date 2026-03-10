@@ -1,30 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { CalendarCheck, Clock, Users, TrendingUp } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
+import { ReservationCard } from '@/components/dashboard/reservation-card'
 import type { Restaurant, Reservation } from '@/lib/supabase/types'
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-ES', {
-    weekday: 'short', day: 'numeric', month: 'short',
-  })
-}
-
-function formatTime(timeStr: string) {
-  return timeStr.slice(0, 5)
-}
-
-const statusLabel: Record<string, string> = {
-  pending: 'Pendiente',
-  confirmed: 'Confirmada',
-  cancelled: 'Cancelada',
-}
-
-const statusVariant: Record<string, 'warning' | 'success' | 'destructive'> = {
-  pending: 'warning',
-  confirmed: 'success',
-  cancelled: 'destructive',
-}
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -46,7 +23,7 @@ export default async function DashboardPage() {
     { count: todayCount },
     { count: pendingCount },
     { count: monthCount },
-    { data: upcomingData },
+    { data: todayData },
   ] = await Promise.all([
     supabase.from('reservations')
       .select('*', { count: 'exact', head: true })
@@ -66,80 +43,109 @@ export default async function DashboardPage() {
     supabase.from('reservations')
       .select('*')
       .eq('restaurant_id', restaurant.id)
-      .gte('reservation_date', today)
+      .eq('reservation_date', today)
       .neq('status', 'cancelled')
-      .order('reservation_date', { ascending: true })
-      .order('reservation_time', { ascending: true })
-      .limit(10),
+      .order('reservation_time', { ascending: true }),
   ])
 
-  const upcomingReservations = (upcomingData ?? []) as Reservation[]
+  const todayReservations = (todayData ?? []) as Reservation[]
+  const mediodia = todayReservations.filter((r) => r.reservation_time < '16:00:00')
+  const noche = todayReservations.filter((r) => r.reservation_time >= '16:00:00')
 
-  const stats = [
-    { label: 'Reservas hoy', value: todayCount ?? 0, icon: CalendarCheck, color: 'text-blue-600' },
-    { label: 'Pendientes', value: pendingCount ?? 0, icon: Clock, color: 'text-yellow-600' },
-    { label: 'Este mes', value: monthCount ?? 0, icon: TrendingUp, color: 'text-green-600' },
-  ]
+  const dateLabel = new Date().toLocaleDateString('es-ES', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  })
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Bienvenido, {restaurant.name}</p>
+    <div>
+      {/* Dark header — escapes shell padding on mobile */}
+      <div
+        className="-mx-4 -mt-4 md:-mx-8 md:-mt-8 px-5 pt-8 pb-6 md:px-8"
+        style={{ backgroundColor: '#0f0c08' }}
+      >
+        <p className="text-xs font-medium capitalize mb-1" style={{ color: '#b8922a' }}>
+          {dateLabel}
+        </p>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold text-white leading-tight">{restaurant.name}</h1>
+          <span className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400 border border-green-800">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+            Agente activo
+          </span>
+        </div>
+
+        {/* Stats grid */}
+        <div className="mt-5 grid grid-cols-3 gap-3">
+          <div className="rounded-xl p-3" style={{ backgroundColor: '#1a1610' }}>
+            <p className="text-xs text-gray-400 mb-1">Hoy</p>
+            <p className="text-3xl font-bold text-white tabular-nums">{todayCount ?? 0}</p>
+          </div>
+          <div
+            className="rounded-xl p-3"
+            style={{
+              backgroundColor: (pendingCount ?? 0) > 0 ? '#451a03' : '#1a1610',
+            }}
+          >
+            <p className="text-xs mb-1" style={{ color: (pendingCount ?? 0) > 0 ? '#fbbf24' : '#9ca3af' }}>
+              Pendientes
+            </p>
+            <p
+              className="text-3xl font-bold tabular-nums"
+              style={{ color: (pendingCount ?? 0) > 0 ? '#d97706' : 'white' }}
+            >
+              {pendingCount ?? 0}
+            </p>
+          </div>
+          <div className="rounded-xl p-3" style={{ backgroundColor: '#1a1610' }}>
+            <p className="text-xs text-gray-400 mb-1">Este mes</p>
+            <p className="text-3xl font-bold text-white tabular-nums">{monthCount ?? 0}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {stats.map(({ label, value, icon: Icon, color }) => (
-          <Card key={label}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{label}</CardTitle>
-              <Icon className={`h-5 w-5 ${color}`} />
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{value}</p>
-            </CardContent>
-          </Card>
-        ))}
+      {/* WhatsApp banner */}
+      <div className="mt-4 flex items-center gap-3 rounded-xl px-4 py-3 bg-green-50 border border-green-200">
+        <MessageSquare className="h-5 w-5 shrink-0" style={{ color: '#16a34a' }} />
+        <div>
+          <p className="text-sm font-semibold text-green-800">WhatsApp conectado</p>
+          <p className="text-xs text-green-600">El agente responde automáticamente a tus clientes</p>
+        </div>
+        <span className="ml-auto h-2 w-2 rounded-full bg-green-500 animate-pulse shrink-0" />
       </div>
 
-      <div>
-        <h2 className="mb-4 text-lg font-semibold">Próximas reservas</h2>
-        <Card>
-          {!upcomingReservations.length ? (
-            <CardContent className="py-8 text-center text-muted-foreground">
-              <Users className="mx-auto mb-3 h-10 w-10 opacity-30" />
-              <p>No hay reservas próximas</p>
-            </CardContent>
-          ) : (
-            <div className="divide-y">
-              {upcomingReservations.map((r) => (
-                <div key={r.id} className="flex items-center justify-between px-6 py-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                      <Users className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{r.customer_name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {r.party_size} personas · {r.customer_phone}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="text-sm font-medium">{formatDate(r.reservation_date)}</p>
-                      <p className="text-sm text-muted-foreground">{formatTime(r.reservation_time)}</p>
-                    </div>
-                    <Badge variant={statusVariant[r.status]}>
-                      {statusLabel[r.status]}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
-      </div>
+      {/* Mediodía */}
+      <section className="mt-6">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+          Mediodía
+        </h2>
+        {mediodia.length === 0 ? (
+          <p className="text-sm text-gray-400 py-3">Sin reservas para el mediodía</p>
+        ) : (
+          <div className="space-y-3">
+            {mediodia.map((r) => (
+              <ReservationCard key={r.id} reservation={r} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Noche */}
+      <section className="mt-6 mb-4">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+          Noche
+        </h2>
+        {noche.length === 0 ? (
+          <p className="text-sm text-gray-400 py-3">Sin reservas para la noche</p>
+        ) : (
+          <div className="space-y-3">
+            {noche.map((r) => (
+              <ReservationCard key={r.id} reservation={r} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   )
 }

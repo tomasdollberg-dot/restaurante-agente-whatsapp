@@ -80,3 +80,15 @@ export async function deleteMenuItem(id: string) {
   revalidatePath('/dashboard/menu')
   return { success: true }
 }
+
+export async function toggleMenuItemAvailability(id: string, is_available: boolean) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('menu_items')
+    .update({ is_available } as never)
+    .eq('id', id)
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard/menu')
+  return { success: true }
+}
