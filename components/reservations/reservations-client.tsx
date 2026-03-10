@@ -24,9 +24,6 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
   return (
     <>
       <div>
-        <h1 className="text-xl font-bold text-gray-900 mb-1">Reservas</h1>
-        <p className="text-sm text-gray-500 mb-4">Gestiona las reservas recibidas por WhatsApp</p>
-
         {/* Filter pills */}
         <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
           {filterBtns.map(({ key, label }) => {
