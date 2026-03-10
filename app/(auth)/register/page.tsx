@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [registered, setRegistered] = useState(false)
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -56,8 +57,30 @@ export default function RegisterPage() {
       return
     }
 
-    router.push('/dashboard')
-    router.refresh()
+    setRegistered(true)
+    setLoading(false)
+  }
+
+  if (registered) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-8 px-4">
+        <Card className="w-full max-w-md text-center">
+          <CardContent className="pt-8 pb-8 space-y-4">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <span className="text-3xl">📬</span>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Revisa tu bandeja de entrada</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Te hemos enviado un email de confirmación a <strong>{form.email}</strong>.
+              Una vez confirmado podrás acceder a tu panel.
+            </p>
+            <p className="text-xs text-gray-400">
+              ¿No lo encuentras? Revisa la carpeta de spam.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
