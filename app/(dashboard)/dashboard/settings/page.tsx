@@ -20,6 +20,7 @@ export default async function SettingsPage() {
     address: null,
     owner_phone: '',
     whatsapp_number: null,
+    google_maps_url: null,
     created_at: '',
   } satisfies Restaurant
 
