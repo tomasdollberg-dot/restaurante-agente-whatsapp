@@ -14,7 +14,7 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Ajustes', icon: Settings },
 ]
 
-export function Sidebar({ restaurantName }: { restaurantName: string }) {
+export function Sidebar({ restaurantName, onClose }: { restaurantName: string; onClose?: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -46,6 +46,7 @@ export function Sidebar({ restaurantName }: { restaurantName: string }) {
             <Link
               key={href}
               href={href}
+              onClick={onClose}
               className={cn(
                 'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
                 isActive

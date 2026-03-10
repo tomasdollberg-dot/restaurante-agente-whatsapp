@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Sidebar } from '@/components/dashboard/sidebar'
+import { DashboardShell } from '@/components/dashboard/dashboard-shell'
 import type { Restaurant } from '@/lib/supabase/types'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -20,11 +20,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const restaurant = data as Pick<Restaurant, 'name'> | null
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar restaurantName={restaurant?.name ?? 'Mi Restaurante'} />
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-8">{children}</div>
-      </main>
-    </div>
+    <DashboardShell restaurantName={restaurant?.name ?? 'Mi Restaurante'}>
+      {children}
+    </DashboardShell>
   )
 }
