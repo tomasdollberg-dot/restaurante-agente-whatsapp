@@ -6,6 +6,18 @@ import type { ReservationStatus, Restaurant } from '@/lib/supabase/types'
 
 export async function updateReservationStatus(id: string, status: ReservationStatus) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  const { data: reservation } = await supabase
+    .from('reservations')
+    .select('restaurant_id, restaurants!inner(owner_id)')
+    .eq('id', id)
+    .eq('restaurants.owner_id', user.id)
+    .maybeSingle()
+
+  if (!reservation) return { error: 'No autorizado' }
+
   const { error } = await supabase
     .from('reservations')
     .update({ status } as never)

@@ -49,10 +49,28 @@ export async function createMenuItem(formData: FormData) {
   return { success: true }
 }
 
+async function verifyMenuItemOwnership(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  itemId: string,
+  userId: string
+): Promise<boolean> {
+  const { data } = await supabase
+    .from('menu_items')
+    .select('restaurant_id, restaurants!inner(owner_id)')
+    .eq('id', itemId)
+    .eq('restaurants.owner_id', userId)
+    .maybeSingle()
+  return !!data
+}
+
 export async function updateMenuItem(id: string, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autenticado' }
+
+  if (!(await verifyMenuItemOwnership(supabase, id, user.id))) {
+    return { error: 'No autorizado' }
+  }
 
   const parsed = MenuItemSchema.safeParse({
     name: formData.get('name'),
@@ -74,6 +92,13 @@ export async function updateMenuItem(id: string, formData: FormData) {
 
 export async function deleteMenuItem(id: string) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  if (!(await verifyMenuItemOwnership(supabase, id, user.id))) {
+    return { error: 'No autorizado' }
+  }
+
   const { error } = await supabase.from('menu_items').delete().eq('id', id)
   if (error) return { error: error.message }
 
@@ -83,6 +108,13 @@ export async function deleteMenuItem(id: string) {
 
 export async function toggleMenuItemAvailability(id: string, is_available: boolean) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  if (!(await verifyMenuItemOwnership(supabase, id, user.id))) {
+    return { error: 'No autorizado' }
+  }
+
   const { error } = await supabase
     .from('menu_items')
     .update({ is_available } as never)

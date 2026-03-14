@@ -129,6 +129,9 @@ export async function processMessage(
     messages,
   })
 
+  if (!response.content?.length) {
+    return { message: 'Lo siento, no pude procesar tu mensaje. Inténtalo de nuevo.' }
+  }
   const rawText = response.content[0].type === 'text' ? response.content[0].text : ''
   // Eliminar bloques de código por si Claude envuelve el token en backticks
   const text = rawText.replace(/```[a-z]*\n?/g, '').replace(/```/g, '')

@@ -78,7 +78,9 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('restaurant_id', restaurant.id)
       .eq('customer_phone', customerPhone)
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
     const conversation = conversationData as Conversation | null
     const history: ConversationMessage[] = conversation?.messages ?? []

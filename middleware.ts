@@ -1,40 +1,42 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
-// MIDDLEWARE DESACTIVADO TEMPORALMENTE
-// Se desactiva para verificar que el resto de la app funciona correctamente.
-// TODO: reactivar la lógica de autenticación.
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
 
-// // El nombre de la cookie de sesión de Supabase se deriva del hostname del proyecto:
-// // sb-{project_ref}-auth-token (puede estar dividida en chunks: .0, .1, ...)
-// const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-// const projectRef = supabaseUrl.match(/https?:\/\/([^.]+)/)?.[1] ?? ''
-// const SESSION_COOKIE = `sb-${projectRef}-auth-token`
+  if (!pathname.startsWith('/dashboard')) {
+    return NextResponse.next()
+  }
 
-export function middleware(request: NextRequest) {
-  return NextResponse.next()
+  const response = NextResponse.next({ request })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  return response
 }
-
-// export function middleware(request: NextRequest) {
-//   const { pathname } = request.nextUrl
-//   const cookies = request.cookies.getAll()
-//   const hasSession = cookies.some(
-//     (c) => c.name === SESSION_COOKIE || c.name.startsWith(`${SESSION_COOKIE}.`)
-//   )
-//
-//   if (!hasSession && pathname.startsWith('/dashboard')) {
-//     const url = request.nextUrl.clone()
-//     url.pathname = '/login'
-//     return NextResponse.redirect(url)
-//   }
-//
-//   if (hasSession && (pathname === '/login' || pathname === '/register')) {
-//     const url = request.nextUrl.clone()
-//     url.pathname = '/dashboard'
-//     return NextResponse.redirect(url)
-//   }
-//
-//   return NextResponse.next()
-// }
 
 export const config = {
   matcher: [
