@@ -9,7 +9,6 @@ const SettingsSchema = z.object({
   description: z.string().optional(),
   address: z.string().optional(),
   owner_phone: z.string().min(1, 'El teléfono del dueño es requerido'),
-  whatsapp_number: z.string().optional(),
   google_maps_url: z.string().optional(),
 })
 
@@ -23,7 +22,6 @@ export async function saveSettings(formData: FormData): Promise<{ error?: string
     description: formData.get('description'),
     address: formData.get('address'),
     owner_phone: formData.get('owner_phone'),
-    whatsapp_number: formData.get('whatsapp_number'),
     google_maps_url: formData.get('google_maps_url'),
   })
 

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { saveSettings } from '@/app/(dashboard)/dashboard/settings/actions'
 import type { Restaurant } from '@/lib/supabase/types'
@@ -41,7 +40,6 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
         </div>
       )}
 
-      {/* Información general */}
       <Card>
         <CardHeader>
           <CardTitle>Información del restaurante</CardTitle>
@@ -61,38 +59,7 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción</Label>
-            <Textarea
-              id="description"
-              name="description"
-              defaultValue={restaurant.description ?? ''}
-              placeholder="Restaurante italiano con más de 20 años de tradición..."
-              rows={3}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="address">Dirección</Label>
-            <Input
-              id="address"
-              name="address"
-              defaultValue={restaurant.address ?? ''}
-              placeholder="Calle Mayor 15, Madrid"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Configuración de WhatsApp */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Configuración de WhatsApp</CardTitle>
-          <CardDescription>
-            Número de contacto del dueño y número de Twilio para el agente
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="owner_phone">Tu teléfono WhatsApp *</Label>
+            <Label htmlFor="owner_phone">Tu WhatsApp personal *</Label>
             <Input
               id="owner_phone"
               name="owner_phone"
@@ -102,28 +69,28 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
               required
             />
             <p className="text-xs text-muted-foreground">
-              El agente te enviará notificaciones aquí cuando no sepa responder a un cliente
+              Te avisaremos aquí cuando el agente no sepa responder algo
             </p>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="whatsapp_number">Número Twilio WhatsApp</Label>
-            <Input
-              id="whatsapp_number"
-              name="whatsapp_number"
-              defaultValue={restaurant.whatsapp_number ?? ''}
-              placeholder="whatsapp:+14155238886"
-            />
-            <p className="text-xs text-muted-foreground">
-              El número de Twilio asignado a tu restaurante (formato: whatsapp:+1...)
-            </p>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="google_maps_url">Enlace de Google Maps</Label>
+            <Label htmlFor="google_maps_url">Tu perfil en Google Maps</Label>
             <Input
               id="google_maps_url"
               name="google_maps_url"
               defaultValue={restaurant.google_maps_url ?? ''}
               placeholder="https://maps.google.com/..."
+            />
+            <p className="text-xs text-muted-foreground">
+              Para pedir reseñas automáticamente después de cada visita
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">Dirección</Label>
+            <Input
+              id="address"
+              name="address"
+              defaultValue={restaurant.address ?? ''}
+              placeholder="Calle Mayor 15, Madrid"
             />
           </div>
         </CardContent>
