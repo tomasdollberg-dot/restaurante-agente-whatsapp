@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import { MessageSquare } from 'lucide-react'
 import { ReservationCard } from '@/components/dashboard/reservation-card'
 import type { Restaurant, Reservation } from '@/lib/supabase/types'
@@ -14,7 +15,7 @@ export default async function DashboardPage() {
     .single()
 
   const restaurant = restaurantData as Pick<Restaurant, 'id' | 'name'> | null
-  if (!restaurant) return null
+  if (!restaurant) redirect('/dashboard/settings')
 
   const today = new Date().toISOString().split('T')[0]
   const firstOfMonth = today.slice(0, 8) + '01'

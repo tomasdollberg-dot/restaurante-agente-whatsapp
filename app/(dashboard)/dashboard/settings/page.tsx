@@ -12,6 +12,8 @@ export default async function SettingsPage() {
     .eq('owner_id', user!.id)
     .single()
 
+  const isNew = !restaurantData
+
   const restaurant = (restaurantData as Restaurant | null) ?? {
     id: '',
     owner_id: user!.id,
@@ -26,6 +28,14 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
+      {isNew && (
+        <div
+          className="rounded-xl px-4 py-3 text-sm font-medium"
+          style={{ backgroundColor: '#1a1610', color: '#b8922a' }}
+        >
+          👋 Bienvenido a Solera. Completa tu perfil para activar el agente.
+        </div>
+      )}
       <div>
         <h1 className="text-2xl font-bold">Ajustes</h1>
         <p className="text-muted-foreground">
