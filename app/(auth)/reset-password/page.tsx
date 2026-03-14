@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,10 +11,34 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 
 export default function ResetPasswordPage() {
   const router = useRouter()
+  const [ready, setReady] = useState(false)
+  const [expired, setExpired] = useState(false)
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    // Trigger URL hash parsing so Supabase picks up the recovery token
+    supabase.auth.getSession()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setReady(true)
+      }
+    })
+
+    const timeout = setTimeout(() => {
+      setExpired(true)
+    }, 3000)
+
+    return () => {
+      subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -39,6 +64,34 @@ export default function ResetPasswordPage() {
     }
 
     router.push('/dashboard')
+  }
+
+  if (!ready && !expired) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-sm text-muted-foreground">Verificando enlace...</p>
+      </div>
+    )
+  }
+
+  if (expired && !ready) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Enlace expirado</CardTitle>
+            <CardDescription>
+              El enlace ha expirado. Solicita uno nuevo.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="justify-center">
+            <Link href="/forgot-password" className="text-primary hover:underline font-medium text-sm">
+              Solicitar nuevo enlace
+            </Link>
+          </CardFooter>
+        </Card>
+      </div>
+    )
   }
 
   return (

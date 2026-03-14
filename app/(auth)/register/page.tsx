@@ -52,6 +52,8 @@ export default function RegisterPage() {
       return
     }
 
+    localStorage.setItem('pending_restaurant_name', form.restaurantName)
+    localStorage.setItem('pending_owner_phone', form.ownerPhone)
     setRegistered(true)
     setLoading(false)
   }
@@ -171,7 +173,7 @@ export default function RegisterPage() {
             <span className="text-2xl">🍽️</span>
           </div>
           <CardTitle className="text-2xl">Crear cuenta</CardTitle>
-          <CardDescription>Registra tu restaurante en RestauranteBot</CardDescription>
+          <CardDescription>Registra tu restaurante en Solera</CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>

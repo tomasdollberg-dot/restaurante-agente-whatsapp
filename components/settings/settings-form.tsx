@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,9 +8,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { saveSettings } from '@/app/(dashboard)/dashboard/settings/actions'
 import type { Restaurant } from '@/lib/supabase/types'
 
-export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
+export function SettingsForm({ restaurant, isNew }: { restaurant: Restaurant; isNew?: boolean }) {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [formKey, setFormKey] = useState(0)
+  const defaults = useRef({ name: restaurant.name, owner_phone: restaurant.owner_phone })
+
+  useEffect(() => {
+    if (!isNew) return
+    const name = localStorage.getItem('pending_restaurant_name')
+    const phone = localStorage.getItem('pending_owner_phone')
+    if (name || phone) {
+      if (name) defaults.current.name = name
+      if (phone) defaults.current.owner_phone = phone
+      localStorage.removeItem('pending_restaurant_name')
+      localStorage.removeItem('pending_owner_phone')
+      setFormKey((k) => k + 1)
+    }
+  }, [isNew])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -29,7 +44,7 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form key={formKey} onSubmit={handleSubmit} className="space-y-6">
       {message && (
         <div className={`rounded-md px-4 py-3 text-sm ${
           message.type === 'success'
@@ -53,7 +68,7 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
             <Input
               id="name"
               name="name"
-              defaultValue={restaurant.name}
+              defaultValue={defaults.current.name}
               placeholder="La Trattoria"
               required
             />
@@ -64,7 +79,7 @@ export function SettingsForm({ restaurant }: { restaurant: Restaurant }) {
               id="owner_phone"
               name="owner_phone"
               type="tel"
-              defaultValue={restaurant.owner_phone}
+              defaultValue={defaults.current.owner_phone}
               placeholder="+34 600 000 000"
               required
             />

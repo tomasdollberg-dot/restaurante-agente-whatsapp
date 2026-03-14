@@ -42,7 +42,7 @@ export default async function SettingsPage() {
           Configura la información de tu restaurante y WhatsApp
         </p>
       </div>
-      <SettingsForm restaurant={restaurant} />
+      <SettingsForm restaurant={restaurant} isNew={isNew} />
     </div>
   )
 }

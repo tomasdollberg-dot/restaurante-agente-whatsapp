@@ -53,7 +53,7 @@ export default function LoginPage() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary">
             <span className="text-2xl">🍽️</span>
           </div>
-          <CardTitle className="text-2xl">RestauranteBot</CardTitle>
+          <CardTitle className="text-2xl">Solera</CardTitle>
           <CardDescription>Inicia sesión en tu panel de administración</CardDescription>
         </CardHeader>
 
