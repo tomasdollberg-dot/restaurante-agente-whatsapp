@@ -15,6 +15,7 @@ export function MenuClient({ itemsByCategory }: MenuClientProps) {
   const [formOpen, setFormOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   function openCreate() {
     setEditingItem(undefined)
@@ -29,8 +30,10 @@ export function MenuClient({ itemsByCategory }: MenuClientProps) {
   async function handleDelete(id: string) {
     if (!confirm('¿Eliminar este ítem del menú?')) return
     setDeletingId(id)
-    await deleteMenuItem(id)
+    setDeleteError(null)
+    const result = await deleteMenuItem(id)
     setDeletingId(null)
+    if (result?.error) setDeleteError(result.error)
   }
 
   const categories = Object.keys(itemsByCategory).sort()
@@ -43,6 +46,9 @@ export function MenuClient({ itemsByCategory }: MenuClientProps) {
           <h1 className="text-xl font-bold text-gray-900">Menú</h1>
           <p className="text-sm text-gray-500">{total} ítems en el menú</p>
         </div>
+        {deleteError && (
+          <p className="mb-3 text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{deleteError}</p>
+        )}
 
         {categories.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">

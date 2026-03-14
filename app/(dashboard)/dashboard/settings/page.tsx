@@ -6,6 +6,7 @@ export default async function SettingsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // TODO: consolidar con layout query (app/(dashboard)/layout.tsx ya obtiene restaurants.name)
   const { data: restaurantData } = await supabase
     .from('restaurants')
     .select('*')

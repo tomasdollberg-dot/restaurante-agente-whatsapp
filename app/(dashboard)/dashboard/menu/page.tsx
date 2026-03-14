@@ -1,12 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import { MenuClient } from '@/components/menu/menu-client'
-import { NoRestaurant } from '@/components/ui/no-restaurant'
 import type { MenuItem, Restaurant } from '@/lib/supabase/types'
 
 export default async function MenuPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // TODO: consolidar con layout query (app/(dashboard)/layout.tsx ya obtiene restaurants.name)
   const { data: restaurantData } = await supabase
     .from('restaurants')
     .select('id')
@@ -14,7 +15,7 @@ export default async function MenuPage() {
     .single()
 
   const restaurant = restaurantData as Pick<Restaurant, 'id'> | null
-  if (!restaurant) return <NoRestaurant />
+  if (!restaurant) redirect('/dashboard/settings')
 
   const { data: itemsData } = await supabase
     .from('menu_items')

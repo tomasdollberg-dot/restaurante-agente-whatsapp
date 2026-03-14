@@ -36,19 +36,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = getServiceClient()
 
-    // 1. Buscar el restaurante por número de WhatsApp (intenta con y sin prefijo whatsapp:)
-    const { data: r1 } = await supabase
+    // 1. Buscar el restaurante por número de WhatsApp (con y sin prefijo whatsapp:)
+    const { data: restaurantData } = await supabase
       .from('restaurants')
       .select('*')
-      .eq('whatsapp_number', twilioNumber)
+      .or(`whatsapp_number.eq.${twilioNumber},whatsapp_number.eq.${twilioNumberClean}`)
+      .limit(1)
       .maybeSingle()
-
-    const restaurantData = r1 ?? await supabase
-      .from('restaurants')
-      .select('*')
-      .eq('whatsapp_number', twilioNumberClean)
-      .maybeSingle()
-      .then((r) => r.data)
 
     console.log('[WEBHOOK] Búsqueda restaurante:', {
       twilioNumber,
@@ -138,7 +132,7 @@ export async function POST(request: NextRequest) {
         party_size: r.partySize,
         notes: r.notes || null,
         status: 'pending',
-      } as never)
+      } as Record<string, unknown>)
       console.log('[WEBHOOK] Reserva creada:', reservationError ? 'ERROR: ' + reservationError.message : 'OK')
 
       if (!reservationError) {
@@ -158,7 +152,7 @@ export async function POST(request: NextRequest) {
           message: `¡Gracias por tu reserva, ${r.name}! 🙏 Estamos deseando recibirte.${mapsLine}`,
           twilio_number: twilioNumber,
           send_at: sendAt.toISOString(),
-        } as never)
+        } as Record<string, unknown>)
         console.log('[WEBHOOK] Mensaje de agradecimiento programado para:', sendAt.toISOString())
       }
     }

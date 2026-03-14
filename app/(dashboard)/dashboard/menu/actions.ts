@@ -41,7 +41,7 @@ export async function createMenuItem(formData: FormData) {
   const { error } = await supabase.from('menu_items').insert({
     restaurant_id: restaurantId,
     ...parsed.data,
-  } as never)
+  } as Record<string, unknown>)
 
   if (error) return { error: error.message }
 
@@ -83,7 +83,7 @@ export async function updateMenuItem(id: string, formData: FormData) {
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
-  const { error } = await supabase.from('menu_items').update(parsed.data as never).eq('id', id)
+  const { error } = await supabase.from('menu_items').update(parsed.data as Record<string, unknown>).eq('id', id)
   if (error) return { error: error.message }
 
   revalidatePath('/dashboard/menu')
@@ -117,7 +117,7 @@ export async function toggleMenuItemAvailability(id: string, is_available: boole
 
   const { error } = await supabase
     .from('menu_items')
-    .update({ is_available } as never)
+    .update({ is_available } as Record<string, unknown>)
     .eq('id', id)
   if (error) return { error: error.message }
 

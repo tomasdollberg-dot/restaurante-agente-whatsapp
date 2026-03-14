@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   for (const msg of messages) {
     try {
       await sendWhatsAppMessage(msg.customer_phone, msg.message, msg.twilio_number)
-      await supabase.from('scheduled_messages').update({ sent: true } as never).eq('id', msg.id)
+      await supabase.from('scheduled_messages').update({ sent: true, sent_at: new Date().toISOString() } as Record<string, unknown>).eq('id', msg.id)
       sent++
       console.log(`[CRON] Enviado a ${msg.customer_phone}`)
     } catch (err) {

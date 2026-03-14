@@ -27,7 +27,7 @@ export async function saveHours(hours: Array<{
 
   const { error } = await supabase
     .from('restaurant_hours')
-    .upsert(rows as never, { onConflict: 'restaurant_id,day_of_week' })
+    .upsert(rows as Record<string, unknown>[], { onConflict: 'restaurant_id,day_of_week' })
 
   if (error) return { error: error.message }
 

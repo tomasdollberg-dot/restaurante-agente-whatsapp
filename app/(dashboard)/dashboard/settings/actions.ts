@@ -29,7 +29,7 @@ export async function saveSettings(formData: FormData): Promise<{ error?: string
 
   const { error } = await supabase
     .from('restaurants')
-    .upsert({ ...parsed.data, owner_id: user.id } as never, { onConflict: 'owner_id' })
+    .upsert({ ...parsed.data, owner_id: user.id } as Record<string, unknown>, { onConflict: 'owner_id' })
 
   if (error) return { error: error.message }
 

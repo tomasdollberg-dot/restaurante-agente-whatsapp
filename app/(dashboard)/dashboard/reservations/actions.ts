@@ -20,7 +20,7 @@ export async function updateReservationStatus(id: string, status: ReservationSta
 
   const { error } = await supabase
     .from('reservations')
-    .update({ status } as never)
+    .update({ status } as Record<string, unknown>)
     .eq('id', id)
 
   if (error) return { error: error.message }
@@ -52,7 +52,7 @@ export async function createReservation(formData: FormData) {
     party_size: Number(formData.get('party_size')),
     notes: (formData.get('notes') as string) || null,
     status: 'pending',
-  } as never)
+  } as Record<string, unknown>)
 
   if (error) return { error: error.message }
 
