@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { LayoutDashboard, CalendarCheck, UtensilsCrossed, Clock, Settings } from 'lucide-react'
 import { Sidebar } from './sidebar'
+import { TopBar } from './top-bar'
 
 const tabs = [
   { href: '/dashboard', label: 'Inicio', icon: LayoutDashboard },
@@ -13,13 +14,21 @@ const tabs = [
   { href: '/dashboard/settings', label: 'Ajustes', icon: Settings },
 ]
 
+interface DashboardShellProps {
+  restaurantName: string
+  todayCount: number
+  pendingCount: number
+  monthCount: number
+  children: React.ReactNode
+}
+
 export function DashboardShell({
   restaurantName,
+  todayCount,
+  pendingCount,
+  monthCount,
   children,
-}: {
-  restaurantName: string
-  children: React.ReactNode
-}) {
+}: DashboardShellProps) {
   const pathname = usePathname()
 
   return (
@@ -32,10 +41,19 @@ export function DashboardShell({
         <Sidebar restaurantName={restaurantName} />
       </div>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-y-auto w-full min-w-0 pb-16 md:pb-0">
-        <div className="p-4 md:p-8">{children}</div>
-      </main>
+      {/* Right column: topbar + content */}
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
+        <TopBar
+          todayCount={todayCount}
+          pendingCount={pendingCount}
+          monthCount={monthCount}
+        />
+
+        {/* Main content */}
+        <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
+          <div className="p-4 md:p-8">{children}</div>
+        </main>
+      </div>
 
       {/* Mobile bottom nav */}
       <nav className="fixed bottom-0 inset-x-0 z-50 flex bg-white border-t border-gray-200 md:hidden">
