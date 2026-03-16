@@ -17,93 +17,17 @@ export default async function DashboardPage() {
   if (!restaurant) redirect('/dashboard/settings')
 
   const today = new Date().toISOString().split('T')[0]
-  const firstOfMonth = today.slice(0, 8) + '01'
 
-  const [
-    { count: todayCount },
-    { count: pendingCount },
-    { count: monthCount },
-    { data: todayData },
-  ] = await Promise.all([
-    supabase.from('reservations')
-      .select('*', { count: 'exact', head: true })
-      .eq('restaurant_id', restaurant.id)
-      .eq('reservation_date', today),
-
-    supabase.from('reservations')
-      .select('*', { count: 'exact', head: true })
-      .eq('restaurant_id', restaurant.id)
-      .eq('status', 'pending'),
-
-    supabase.from('reservations')
-      .select('*', { count: 'exact', head: true })
-      .eq('restaurant_id', restaurant.id)
-      .gte('reservation_date', firstOfMonth),
-
-    supabase.from('reservations')
-      .select('*')
-      .eq('restaurant_id', restaurant.id)
-      .eq('reservation_date', today)
-      .neq('status', 'cancelled')
-      .order('reservation_time', { ascending: true }),
-  ])
+  const { data: todayData } = await supabase.from('reservations')
+    .select('*')
+    .eq('restaurant_id', restaurant.id)
+    .eq('reservation_date', today)
+    .neq('status', 'cancelled')
+    .order('reservation_time', { ascending: true })
 
   const todayReservations = (todayData ?? []) as Reservation[]
   const mediodia = todayReservations.filter((r) => r.reservation_time < '16:00:00')
   const noche = todayReservations.filter((r) => r.reservation_time >= '16:00:00')
-
-  const dateLabel = new Date().toLocaleDateString('es-ES', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
-
-  return (
-    <div>
-      {/* Dark header — escapes shell padding on mobile */}
-      <div
-        className="-mx-4 -mt-4 md:-mx-8 md:-mt-8 px-5 pt-8 pb-6 md:px-8"
-        style={{ backgroundColor: '#0f0c08' }}
-      >
-        <p className="text-xs font-medium capitalize mb-1" style={{ color: '#b8922a' }}>
-          {dateLabel}
-        </p>
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-white leading-tight">{restaurant.name}</h1>
-          <span className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400 border border-green-800">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-            Agente activo
-          </span>
-        </div>
-
-        {/* Stats grid */}
-        <div className="mt-5 grid grid-cols-3 gap-3">
-          <div className="rounded-xl p-3" style={{ backgroundColor: '#1a1610' }}>
-            <p className="text-xs text-gray-400 mb-1">Hoy</p>
-            <p className="text-3xl font-bold text-white tabular-nums">{todayCount ?? 0}</p>
-          </div>
-          <div
-            className="rounded-xl p-3"
-            style={{
-              backgroundColor: (pendingCount ?? 0) > 0 ? '#451a03' : '#1a1610',
-            }}
-          >
-            <p className="text-xs mb-1" style={{ color: (pendingCount ?? 0) > 0 ? '#fbbf24' : '#9ca3af' }}>
-              Pendientes
-            </p>
-            <p
-              className="text-3xl font-bold tabular-nums"
-              style={{ color: (pendingCount ?? 0) > 0 ? '#d97706' : 'white' }}
-            >
-              {pendingCount ?? 0}
-            </p>
-          </div>
-          <div className="rounded-xl p-3" style={{ backgroundColor: '#1a1610' }}>
-            <p className="text-xs text-gray-400 mb-1">Este mes</p>
-            <p className="text-3xl font-bold text-white tabular-nums">{monthCount ?? 0}</p>
-          </div>
-        </div>
-      </div>
 
       {/* Mediodía */}
       <section className="mt-6">
