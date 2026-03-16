@@ -84,7 +84,7 @@ export function SettingsForm({ restaurant, isNew }: { restaurant: Restaurant; is
               required
             />
             <p className="text-xs text-muted-foreground">
-              Te avisaremos aquí cuando el agente no sepa responder algo
+              Incluye el prefijo de país. Ej: +34600000000 (España) o +54911000000 (Argentina)
             </p>
           </div>
           <div className="space-y-2">
