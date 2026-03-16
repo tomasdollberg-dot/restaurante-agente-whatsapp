@@ -40,6 +40,9 @@ export async function updateReservationStatus(id: string, status: ReservationSta
   }
 
   if (customerMsg && r.customer_phone) {
+    console.log('[RESERVA] Intentando enviar WhatsApp a:', r.customer_phone, 'estado:', status)
+    console.log('[RESERVA] TWILIO_ACCOUNT_SID presente:', !!process.env.TWILIO_ACCOUNT_SID)
+    console.log('[RESERVA] TWILIO_AUTH_TOKEN presente:', !!process.env.TWILIO_AUTH_TOKEN)
     try {
       await sendWhatsAppMessage(r.customer_phone, customerMsg, twilioFrom)
     } catch (e) {
