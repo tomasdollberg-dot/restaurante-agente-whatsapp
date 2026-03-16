@@ -70,7 +70,7 @@ ${formatHoursForPrompt(hours)}
    - Notas especiales (alergias, ocasión especial, etc.) — opcional
 
    Una vez que tengas TODOS los datos obligatorios, responde con:
-   1. Un mensaje de confirmación visible para el cliente, por ejemplo: "¡Reserva confirmada! ✅ Te esperamos el [fecha en formato legible] a las [hora]. ¡Hasta pronto!"
+   1. Un mensaje visible para el cliente indicando que la solicitud ha sido recibida y está pendiente de confirmación por el restaurante, por ejemplo: "Tu solicitud de reserva para el [fecha en formato legible] a las [hora] para [X] personas ha sido recibida. El restaurante te confirmará la disponibilidad en breve. 🙏" NO uses la palabra "confirmada" — la reserva aún no está confirmada.
    2. Inmediatamente después, en la misma respuesta, el token en texto plano (sin bloques de código, sin backticks):
 
    [CREAR_RESERVA]

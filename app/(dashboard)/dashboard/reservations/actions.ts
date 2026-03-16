@@ -2,21 +2,23 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { ReservationStatus, Restaurant } from '@/lib/supabase/types'
+import { sendWhatsAppMessage } from '@/lib/twilio'
+import type { ReservationStatus, Reservation, Restaurant } from '@/lib/supabase/types'
 
 export async function updateReservationStatus(id: string, status: ReservationStatus) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autenticado' }
 
-  const { data: reservation } = await supabase
+  // Fetch reservation + restaurant in one query for auth check and notification data
+  const { data: reservationData } = await supabase
     .from('reservations')
-    .select('restaurant_id, restaurants!inner(owner_id)')
+    .select('*, restaurants!inner(owner_id, name, whatsapp_number)')
     .eq('id', id)
     .eq('restaurants.owner_id', user.id)
     .maybeSingle()
 
-  if (!reservation) return { error: 'No autorizado' }
+  if (!reservationData) return { error: 'No autorizado' }
 
   const { error } = await supabase
     .from('reservations')
@@ -24,6 +26,26 @@ export async function updateReservationStatus(id: string, status: ReservationSta
     .eq('id', id)
 
   if (error) return { error: error.message }
+
+  // Send WhatsApp notification to the customer
+  const r = reservationData as Reservation & { restaurants: Pick<Restaurant, 'owner_id' | 'name' | 'whatsapp_number'> }
+  const restaurantName = r.restaurants.name
+  const twilioFrom = r.restaurants.whatsapp_number ?? process.env.TWILIO_WHATSAPP_NUMBER!
+
+  let customerMsg: string | null = null
+  if (status === 'confirmed') {
+    customerMsg = `Hola ${r.customer_name}, tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} está confirmada. ¡Hasta pronto!`
+  } else if (status === 'cancelled') {
+    customerMsg = `Hola ${r.customer_name}, lamentamos informarte que tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} no ha podido ser confirmada. Por favor contáctanos para buscar otra alternativa.`
+  }
+
+  if (customerMsg && r.customer_phone) {
+    try {
+      await sendWhatsAppMessage(r.customer_phone, customerMsg, twilioFrom)
+    } catch (e) {
+      console.error('[WHATSAPP] Error enviando notificación al cliente:', e)
+    }
+  }
 
   revalidatePath('/dashboard/reservations')
   revalidatePath('/dashboard')
