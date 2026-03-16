@@ -36,7 +36,7 @@ export async function updateReservationStatus(id: string, status: ReservationSta
   if (status === 'confirmed') {
     customerMsg = `Hola ${r.customer_name}, tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} está confirmada. ¡Hasta pronto!`
   } else if (status === 'cancelled') {
-    customerMsg = `Hola ${r.customer_name}, lamentamos informarte que tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} no ha podido ser confirmada. Por favor contáctanos para buscar otra alternativa.`
+    customerMsg = `Hola ${r.customer_name}, lamentamos informarte que no tenemos disponibilidad para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} en ${restaurantName}. Esperamos verte pronto.`
   }
 
   if (customerMsg && r.customer_phone) {
