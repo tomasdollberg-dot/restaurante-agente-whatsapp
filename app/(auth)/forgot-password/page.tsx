@@ -2,10 +2,6 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import Link from 'next/link'
 
 export default function ForgotPasswordPage() {
@@ -37,16 +33,16 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <div
-        className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 45%, #2d1f08 100%)' }}
+        className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 60%, #0f0c08 100%)' }}
       >
         <div
-          className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.35) 0%, transparent 70%)' }}
+          className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
         />
         <div
-          className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full opacity-15"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.3) 0%, transparent 70%)' }}
+          className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
         />
 
         <div className="relative w-full max-w-sm flex flex-col items-center text-center gap-6">
@@ -61,8 +57,8 @@ export default function ForgotPasswordPage() {
             ✉️
           </div>
 
-          <div className="space-y-2">
-            <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800 }}>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}>
               Revisa tu email
             </h1>
             <p className="text-sm" style={{ color: 'rgba(245,240,232,0.55)' }}>
@@ -82,7 +78,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <div
-            className="w-full rounded-2xl p-5 text-left space-y-4"
+            className="w-full rounded-2xl p-5 text-left flex flex-col gap-4"
             style={{
               backgroundColor: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.07)',
@@ -131,47 +127,94 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Restablecer contraseña</CardTitle>
-          <CardDescription>
-            Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.
-          </CardDescription>
-        </CardHeader>
+    <div
+      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 60%, #0f0c08 100%)' }}
+    >
+      <div
+        className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
+        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
+        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+      />
 
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {error && (
-              <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                {error}
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="tu@restaurante.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-          </CardContent>
-
-          <CardFooter className="flex flex-col gap-3">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Enviando...' : 'Enviar enlace'}
-            </Button>
-            <p className="text-sm text-muted-foreground text-center">
-              <Link href="/login" className="text-primary hover:underline font-medium">
-                Volver al inicio de sesión
-              </Link>
+      <div className="relative w-full max-w-sm flex flex-col gap-8">
+        {/* Logo */}
+        <div className="flex flex-col items-center gap-6">
+          <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
+            SOLERA
+          </p>
+          <div className="text-center">
+            <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}>
+              Restablecer contraseña
+            </h1>
+            <p className="mt-2 text-sm" style={{ color: 'rgba(245,240,232,0.4)' }}>
+              Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.
             </p>
-          </CardFooter>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          {error && (
+            <div
+              className="rounded-xl px-4 py-3 text-sm"
+              style={{
+                backgroundColor: 'rgba(239,68,68,0.15)',
+                border: '1px solid rgba(239,68,68,0.3)',
+                color: '#fca5a5',
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="email" className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="tu@restaurante.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#f5f0e8',
+              }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
+            style={{ backgroundColor: '#b8922a' }}
+          >
+            {loading ? 'Enviando...' : 'Enviar enlace'}
+          </button>
         </form>
-      </Card>
+
+        {/* Back to login */}
+        <p className="text-center text-sm" style={{ color: 'rgba(245,240,232,0.35)' }}>
+          <Link
+            href="/login"
+            className="font-semibold transition-opacity hover:opacity-80"
+            style={{ color: '#b8922a' }}
+          >
+            ← Volver al inicio de sesión
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }
