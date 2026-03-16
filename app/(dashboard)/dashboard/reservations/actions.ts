@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { sendWhatsAppMessage } from '@/lib/twilio'
-import type { ReservationStatus, Reservation, Restaurant } from '@/lib/supabase/types'
+import type { ReservationStatus, Reservation, Restaurant, ConversationMessage } from '@/lib/supabase/types'
 
 export async function updateReservationStatus(id: string, status: ReservationStatus) {
   const supabase = await createClient()
@@ -47,6 +47,38 @@ export async function updateReservationStatus(id: string, status: ReservationSta
       await sendWhatsAppMessage(r.customer_phone, customerMsg, twilioFrom)
     } catch (e) {
       console.error('[WHATSAPP] Error enviando notificación al cliente:', e)
+    }
+
+    // Save the system message to conversation history
+    try {
+      const newMsg: ConversationMessage = {
+        role: 'assistant',
+        content: customerMsg,
+        timestamp: new Date().toISOString(),
+      }
+
+      const { data: convData } = await supabase
+        .from('conversations')
+        .select('id, messages')
+        .eq('restaurant_id', r.restaurant_id)
+        .eq('customer_phone', r.customer_phone)
+        .maybeSingle()
+
+      if (convData) {
+        const existing = (convData.messages as ConversationMessage[]) ?? []
+        await supabase
+          .from('conversations')
+          .update({ messages: [...existing, newMsg] })
+          .eq('id', convData.id)
+      } else {
+        await supabase.from('conversations').insert({
+          restaurant_id: r.restaurant_id,
+          customer_phone: r.customer_phone,
+          messages: [newMsg],
+        } as Record<string, unknown>)
+      }
+    } catch (e) {
+      console.error('[RESERVA] Error guardando mensaje en historial:', e)
     }
   }
 

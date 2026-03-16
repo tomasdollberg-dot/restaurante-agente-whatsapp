@@ -32,9 +32,10 @@ function formatMenuForPrompt(items: MenuItem[]): string {
 function formatHoursForPrompt(hours: RestaurantHours[]): string {
   if (!hours.length) return 'Horarios no configurados.'
   return DAYS_ES.map((day, i) => {
+    const label = day.charAt(0).toUpperCase() + day.slice(1)
     const h = hours.find((x) => x.day_of_week === i)
-    if (!h || h.is_closed) return `  ${day}: Cerrado / Closed`
-    return `  ${day} / ${DAYS_EN[i]}: ${h.open_time?.slice(0, 5)} - ${h.close_time?.slice(0, 5)}`
+    if (!h || h.is_closed) return `  ${label}: Cerrado`
+    return `  ${label}: ${h.open_time?.slice(0, 5)} - ${h.close_time?.slice(0, 5)}`
   }).join('\n')
 }
 
