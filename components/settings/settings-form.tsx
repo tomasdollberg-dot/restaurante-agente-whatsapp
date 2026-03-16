@@ -79,7 +79,7 @@ export function SettingsForm({ restaurant, isNew }: { restaurant: Restaurant; is
               id="owner_phone"
               name="owner_phone"
               type="tel"
-              defaultValue={defaults.current.owner_phone}
+              defaultValue={defaults.current.owner_phone ?? ''}
               placeholder="+34 600 000 000"
               required
             />
