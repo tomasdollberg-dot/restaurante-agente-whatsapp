@@ -76,11 +76,6 @@ export function HoursForm({ existing }: { existing: RestaurantHours[] }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <h1 className="text-xl font-bold text-gray-900">Horarios</h1>
-        <p className="text-sm text-gray-500">Define los horarios de apertura y cierre</p>
-      </div>
-
       {message && (
         <div
           className={`mb-4 rounded-xl px-4 py-3 text-sm ${
