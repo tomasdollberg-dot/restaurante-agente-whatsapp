@@ -6,10 +6,10 @@ import { z } from 'zod'
 
 const SettingsSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
-  description: z.string().optional(),
-  address: z.string().optional(),
-  owner_phone: z.string().nullable().optional().transform((v) => v ?? ''),
-  google_maps_url: z.string().optional(),
+  description: z.string().nullable().optional().transform((v) => v ?? ''),
+  address: z.string().nullable().optional().transform((v) => v ?? ''),
+  owner_phone: z.string().min(1, 'El teléfono es requerido'),
+  google_maps_url: z.string().nullable().optional().transform((v) => v ?? ''),
 })
 
 export async function saveSettings(formData: FormData): Promise<{ error?: string; success?: boolean }> {
@@ -19,10 +19,10 @@ export async function saveSettings(formData: FormData): Promise<{ error?: string
 
   const parsed = SettingsSchema.safeParse({
     name: formData.get('name'),
-    description: formData.get('description'),
-    address: formData.get('address'),
-    owner_phone: formData.get('owner_phone') ?? '',
-    google_maps_url: formData.get('google_maps_url'),
+    description: formData.get('description') ?? '',
+    address: formData.get('address') ?? '',
+    owner_phone: formData.get('owner_phone'),
+    google_maps_url: formData.get('google_maps_url') ?? '',
   })
 
   if (!parsed.success) return { error: parsed.error.issues[0].message }
