@@ -29,6 +29,8 @@ export default async function DashboardPage() {
   const mediodia = todayReservations.filter((r) => r.reservation_time < '16:00:00')
   const noche = todayReservations.filter((r) => r.reservation_time >= '16:00:00')
 
+  return (
+    <div>
       {/* Mediodía */}
       <section className="mt-6">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
