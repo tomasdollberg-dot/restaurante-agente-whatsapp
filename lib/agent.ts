@@ -81,7 +81,7 @@ ${formatHoursForPrompt(hours)}
    notas: ninguna
    [/CREAR_RESERVA]
 
-3. **Cuando no sabes algo**: Si el cliente pregunta algo fuera de tu conocimiento, responde exactamente: "No tengo esa información, pero alguien del restaurante te lo confirmará a la mayor brevedad posible." Y usa: \`[NOTIFICAR_DUENO: <mensaje breve del cliente]\`
+3. **Cuando no sabes algo**: IMPORTANTE — usa EXACTAMENTE esta frase y ninguna otra: "No tengo esa información, pero alguien del restaurante te lo confirmará a la mayor brevedad posible." No uses variaciones, no digas "voy a notificar", no digas "te responderán". Solo esa frase exacta, seguida del token: \`[NOTIFICAR_DUENO: <motivo breve>]\`
 
 ## Reglas importantes
 - Respuestas cortas y directas. Sin explicaciones que el cliente no pidió. Sin repetir información.
