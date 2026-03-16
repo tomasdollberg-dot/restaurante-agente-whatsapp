@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { MessageSquare } from 'lucide-react'
 import { ReservationCard } from '@/components/dashboard/reservation-card'
 import type { Restaurant, Reservation } from '@/lib/supabase/types'
 
@@ -104,16 +103,6 @@ export default async function DashboardPage() {
             <p className="text-3xl font-bold text-white tabular-nums">{monthCount ?? 0}</p>
           </div>
         </div>
-      </div>
-
-      {/* WhatsApp banner */}
-      <div className="mt-4 flex items-center gap-3 rounded-xl px-4 py-3 bg-green-50 border border-green-200">
-        <MessageSquare className="h-5 w-5 shrink-0" style={{ color: '#16a34a' }} />
-        <div>
-          <p className="text-sm font-semibold text-green-800">WhatsApp conectado</p>
-          <p className="text-xs text-green-600">El agente responde automáticamente a tus clientes</p>
-        </div>
-        <span className="ml-auto h-2 w-2 rounded-full bg-green-500 animate-pulse shrink-0" />
       </div>
 
       {/* Mediodía */}

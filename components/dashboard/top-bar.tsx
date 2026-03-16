@@ -80,6 +80,19 @@ export function TopBar({ todayCount, pendingCount, monthCount }: TopBarProps) {
             {monthCount}
           </p>
         </div>
+        <div
+          className="self-center"
+          style={{ width: '1px', height: '28px', backgroundColor: 'rgba(255,255,255,0.08)' }}
+        />
+        <div className="text-right">
+          <div className="flex items-center justify-end gap-1 mb-0.5">
+            <span
+              style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#4ade80', display: 'inline-block' }}
+            />
+            <p style={{ color: '#4ade80', fontSize: '11px', fontWeight: 600, lineHeight: 1 }}>Activo</p>
+          </div>
+          <p style={{ color: 'rgba(245,240,232,0.4)', fontSize: '10px' }}>WhatsApp</p>
+        </div>
       </div>
     </div>
   )
