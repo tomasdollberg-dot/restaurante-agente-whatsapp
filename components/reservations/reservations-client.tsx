@@ -35,7 +35,7 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
                 onClick={() => setFilter(key)}
                 className="shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
                 style={{
-                  backgroundColor: isActive ? '#b8922a' : '#f3f4f6',
+                  backgroundColor: isActive ? '#b8922a' : 'rgba(15,12,8,0.08)',
                   color: isActive ? 'white' : '#6b7280',
                 }}
               >
@@ -43,7 +43,7 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
                 <span
                   className="text-xs px-1.5 py-0.5 rounded-full"
                   style={{
-                    backgroundColor: isActive ? 'rgba(255,255,255,0.25)' : '#e5e7eb',
+                    backgroundColor: isActive ? 'rgba(255,255,255,0.25)' : 'rgba(15,12,8,0.1)',
                     color: isActive ? 'white' : '#6b7280',
                   }}
                 >

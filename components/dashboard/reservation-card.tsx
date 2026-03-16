@@ -33,17 +33,20 @@ export function ReservationCard({
   const time = reservation.reservation_time.slice(0, 5)
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+    <div
+      className="rounded-2xl p-4 shadow-sm"
+      style={{ backgroundColor: '#fffdf9', border: '1px solid #e8e0d0' }}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <span
-            className="text-2xl font-bold tabular-nums shrink-0"
-            style={{ color: '#0f0c08' }}
+            className="text-2xl tabular-nums shrink-0"
+            style={{ color: '#0f0c08', fontWeight: 900 }}
           >
             {time}
           </span>
           <div>
-            <p className="font-semibold text-gray-900 leading-tight">{reservation.customer_name}</p>
+            <p className="leading-tight" style={{ fontWeight: 800, color: '#0f0c08' }}>{reservation.customer_name}</p>
             <p className="text-sm text-gray-500 mt-0.5">
               <Users className="inline h-3.5 w-3.5 mr-0.5" />
               {reservation.party_size} personas
@@ -75,7 +78,7 @@ export function ReservationCard({
       </div>
 
       {reservation.notes && (
-        <p className="mt-2 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+        <p className="mt-2 text-sm text-gray-500 rounded-lg px-3 py-2" style={{ backgroundColor: 'rgba(15,12,8,0.04)' }}>
           {reservation.notes}
         </p>
       )}

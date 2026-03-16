@@ -33,8 +33,8 @@ export function DashboardShell({
 
   return (
     <div
-      className="flex h-screen overflow-hidden bg-gray-50"
-      style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+      className="flex h-screen overflow-hidden"
+      style={{ fontFamily: 'system-ui, -apple-system, sans-serif', backgroundColor: '#f5f0e8' }}
     >
       {/* Desktop sidebar */}
       <div className="hidden md:flex">
