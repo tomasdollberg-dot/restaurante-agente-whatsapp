@@ -14,10 +14,25 @@ const googleSvg = (
   </svg>
 )
 
+const eyeIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const eyeOffIcon = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.94 17.94A10.07 10.07 0 0112 20C5 20 1 12 1 12A18.45 18.45 0 015.06 5.06M9.9 4.24A9.12 9.12 0 0112 4C19 4 23 12 23 12A18.5 18.5 0 0120.71 15.68M1 1L23 23" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9.88 9.88A3 3 0 0014.12 14.12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -60,146 +75,248 @@ export default function LoginPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-6 py-12 relative overflow-hidden"
-      style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 60%, #0f0c08 100%)' }}
-    >
-      {/* Decorative circles */}
-      <div
-        className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
-      />
-      <div
-        className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
-      />
+    <div className="min-h-screen flex" style={{ background: '#0f0c08' }}>
 
-      <div className="relative w-full max-w-sm flex flex-col gap-8">
+      {/* ── LEFT PANEL (desktop only) ── */}
+      <div
+        className="hidden md:flex md:w-[45%] flex-col justify-between px-12 py-10 relative overflow-hidden flex-shrink-0"
+        style={{ background: 'linear-gradient(160deg, #0f0c08 0%, #1e1508 100%)' }}
+      >
+        {/* Decorative circles */}
+        <div
+          className="pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+        />
+        <div
+          className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+        />
+
         {/* Logo */}
-        <div className="flex flex-col items-center gap-6">
+        <p
+          className="relative text-xs font-bold tracking-[0.35em] uppercase z-10"
+          style={{ color: '#b8922a' }}
+        >
+          SOLERA
+        </p>
+
+        {/* Central block */}
+        <div className="relative z-10 flex flex-col gap-10">
+          <div className="flex flex-col gap-3">
+            <h2
+              className="leading-[1.1]"
+              style={{ color: '#f5f0e8', fontWeight: 800, fontSize: '2.25rem', letterSpacing: '-0.03em' }}
+            >
+              Tu restaurante sigue funcionando.
+            </h2>
+            <p style={{ color: 'rgba(245,240,232,0.4)', fontSize: '14px' }}>
+              El agente está activo y atendiendo a tus clientes ahora mismo.
+            </p>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex gap-8">
+            {[
+              { value: '24/7', label: 'Siempre activo' },
+              { value: '<2s', label: 'Responde al instante' },
+              { value: '0', label: 'Reservas perdidas' },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col gap-1">
+                <span
+                  className="text-2xl font-bold"
+                  style={{ color: '#b8922a', letterSpacing: '-0.02em' }}
+                >
+                  {stat.value}
+                </span>
+                <span style={{ color: 'rgba(245,240,232,0.35)', fontSize: '12px' }}>
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="relative z-10 flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <span
+              className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+              style={{ backgroundColor: '#22c55e' }}
+            />
+            <span
+              className="relative inline-flex rounded-full h-2 w-2"
+              style={{ backgroundColor: '#22c55e' }}
+            />
+          </span>
+          <p style={{ color: 'rgba(245,240,232,0.3)', fontSize: '12px' }}>
+            Únete a los restaurantes que nunca pierden una reserva
+          </p>
+        </div>
+      </div>
+
+      {/* ── RIGHT PANEL (form) ── */}
+      <div
+        className="flex-1 flex items-center justify-center px-6 py-12 relative overflow-hidden"
+        style={{ background: '#0f0c08' }}
+      >
+        {/* Mobile-only decorative circles */}
+        <div
+          className="md:hidden pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+        />
+        <div
+          className="md:hidden pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+        />
+
+        <div className="relative w-full max-w-sm flex flex-col gap-8">
+          {/* Mobile logo */}
           <p
-            className="text-xs font-bold tracking-[0.35em] uppercase"
+            className="md:hidden text-xs font-bold tracking-[0.35em] uppercase text-center"
             style={{ color: '#b8922a' }}
           >
             SOLERA
           </p>
+
+          {/* Header */}
           <div className="text-center">
-            <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}>
+            <h1
+              className="text-3xl leading-tight"
+              style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}
+            >
               Bienvenido de nuevo
             </h1>
             <p className="mt-2 text-sm" style={{ color: 'rgba(245,240,232,0.4)' }}>
-              Inicia sesión en tu panel de administración
+              Inicia sesión en tu panel
             </p>
           </div>
-        </div>
 
-        {/* Google button */}
-        <button
-          type="button"
-          onClick={handleGoogle}
-          className="w-full flex items-center justify-center gap-3 rounded-xl py-3 px-4 text-sm font-semibold text-gray-800 transition-opacity hover:opacity-90 active:opacity-75"
-          style={{ backgroundColor: '#fff' }}
-        >
-          {googleSvg}
-          Continuar con Google
-        </button>
-
-        {/* Separator */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          <span className="text-xs" style={{ color: 'rgba(245,240,232,0.35)' }}>o con email</span>
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          {error && (
-            <div
-              className="rounded-xl px-4 py-3 text-sm"
-              style={{
-                backgroundColor: 'rgba(239,68,68,0.15)',
-                border: '1px solid rgba(239,68,68,0.3)',
-                color: '#fca5a5',
-              }}
-            >
-              {error}
-            </div>
-          )}
-
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="tu@restaurante.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f5f0e8',
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>
-                Contraseña
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-xs font-medium transition-opacity hover:opacity-80"
-                style={{ color: '#b8922a' }}
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {error && (
+              <div
+                className="rounded-xl px-4 py-3 text-sm"
+                style={{
+                  backgroundColor: 'rgba(239,68,68,0.15)',
+                  border: '1px solid rgba(239,68,68,0.3)',
+                  color: '#fca5a5',
+                }}
               >
-                ¿Olvidaste tu contraseña?
-              </Link>
+                {error}
+              </div>
+            )}
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="tu@restaurante.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#f5f0e8',
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+              />
             </div>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors"
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f5f0e8',
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
-            />
+
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="text-sm" style={{ color: 'rgba(245,240,232,0.6)' }}>
+                  Contraseña
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-medium transition-opacity hover:opacity-80"
+                  style={{ color: '#b8922a' }}
+                >
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full rounded-xl px-4 py-3 pr-12 text-sm outline-none transition-colors"
+                  style={{
+                    backgroundColor: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#f5f0e8',
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-opacity hover:opacity-80"
+                  style={{ color: 'rgba(245,240,232,0.35)' }}
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  {showPassword ? eyeOffIcon : eyeIcon}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
+              style={{ backgroundColor: '#b8922a' }}
+            >
+              {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.07)' }} />
+            <span className="text-xs" style={{ color: 'rgba(245,240,232,0.35)' }}>o</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.07)' }} />
           </div>
 
+          {/* Google button */}
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
-            style={{ backgroundColor: '#b8922a' }}
+            type="button"
+            onClick={handleGoogle}
+            className="w-full flex items-center justify-center gap-3 rounded-xl py-3 px-4 text-sm font-medium transition-opacity hover:opacity-80 active:opacity-60"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(245,240,232,0.5)',
+            }}
           >
-            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            {googleSvg}
+            Continuar con Google
           </button>
-        </form>
 
-        {/* Footer link */}
-        <p className="text-center text-sm" style={{ color: 'rgba(245,240,232,0.35)' }}>
-          ¿No tienes cuenta?{' '}
-          <Link
-            href="/register"
-            className="font-semibold transition-opacity hover:opacity-80"
-            style={{ color: '#b8922a' }}
-          >
-            Regístrate
-          </Link>
-        </p>
+          {/* Footer link */}
+          <p className="text-center text-sm" style={{ color: 'rgba(245,240,232,0.35)' }}>
+            ¿No tienes cuenta?{' '}
+            <Link
+              href="/register"
+              className="font-semibold transition-opacity hover:opacity-80"
+              style={{ color: '#b8922a' }}
+            >
+              Regístrate
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )
