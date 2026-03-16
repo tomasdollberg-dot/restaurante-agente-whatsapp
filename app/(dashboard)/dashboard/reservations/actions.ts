@@ -29,12 +29,12 @@ export async function updateReservationStatus(id: string, status: ReservationSta
 
   // Send WhatsApp notification to the customer
   const r = reservationData as Reservation & { restaurants: Pick<Restaurant, 'owner_id' | 'name' | 'whatsapp_number'> }
-  const restaurantName = r.restaurants.name
+  const restaurantName = r.restaurants.name.trim()
   const twilioFrom = r.restaurants.whatsapp_number ?? process.env.TWILIO_WHATSAPP_NUMBER!
 
   let customerMsg: string | null = null
   if (status === 'confirmed') {
-    customerMsg = `Hola ${r.customer_name}, tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} está confirmada. ¡Hasta pronto!`
+    customerMsg = `Hola ${r.customer_name}, tu reserva en ${restaurantName} para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} está confirmada. ¡Nos vemos pronto!`
   } else if (status === 'cancelled') {
     customerMsg = `Hola ${r.customer_name}, lamentamos informarte que no tenemos disponibilidad para el ${r.reservation_date} a las ${r.reservation_time.slice(0, 5)} en ${restaurantName}. Esperamos verte pronto.`
   }
