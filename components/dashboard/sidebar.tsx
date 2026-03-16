@@ -13,7 +13,7 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Ajustes', icon: Settings },
 ]
 
-export function Sidebar({ restaurantName, onClose }: { restaurantName: string; onClose?: () => void }) {
+export function Sidebar({ restaurantName, whatsappNumber, onClose }: { restaurantName: string; whatsappNumber?: string | null; onClose?: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -78,12 +78,19 @@ export function Sidebar({ restaurantName, onClose }: { restaurantName: string; o
         className="px-5 py-5 space-y-4"
         style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
       >
-        {/* Agente activo badge */}
+        {/* Agente status badge */}
         <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse shrink-0" />
-          <span className="text-xs" style={{ color: 'rgba(245,240,232,0.35)' }}>
-            Agente activo
-          </span>
+          {whatsappNumber ? (
+            <>
+              <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse shrink-0" />
+              <span className="text-xs" style={{ color: 'rgba(245,240,232,0.35)' }}>Agente activo</span>
+            </>
+          ) : (
+            <>
+              <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: 'rgba(245,240,232,0.2)' }} />
+              <span className="text-xs" style={{ color: 'rgba(245,240,232,0.25)' }}>Sin configurar</span>
+            </>
+          )}
         </div>
 
         {/* Logout */}

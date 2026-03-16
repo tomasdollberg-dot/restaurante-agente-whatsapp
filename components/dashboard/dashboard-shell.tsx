@@ -16,6 +16,7 @@ const tabs = [
 
 interface DashboardShellProps {
   restaurantName: string
+  whatsappNumber?: string | null
   todayCount: number
   pendingCount: number
   monthCount: number
@@ -24,6 +25,7 @@ interface DashboardShellProps {
 
 export function DashboardShell({
   restaurantName,
+  whatsappNumber,
   todayCount,
   pendingCount,
   monthCount,
@@ -38,7 +40,7 @@ export function DashboardShell({
     >
       {/* Desktop sidebar */}
       <div className="hidden md:flex">
-        <Sidebar restaurantName={restaurantName} />
+        <Sidebar restaurantName={restaurantName} whatsappNumber={whatsappNumber} />
       </div>
 
       {/* Right column: topbar + content */}

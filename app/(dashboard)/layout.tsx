@@ -11,11 +11,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const { data } = await supabase
     .from('restaurants')
-    .select('id, name')
+    .select('id, name, whatsapp_number')
     .eq('owner_id', user.id)
     .single()
 
-  const restaurant = data as Pick<Restaurant, 'id' | 'name'> | null
+  const restaurant = data as Pick<Restaurant, 'id' | 'name' | 'whatsapp_number'> | null
 
   const today = new Date().toISOString().split('T')[0]
   const firstOfMonth = today.slice(0, 8) + '01'
@@ -41,6 +41,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <DashboardShell
       restaurantName={restaurant?.name ?? 'Mi Restaurante'}
+      whatsappNumber={restaurant?.whatsapp_number}
       todayCount={todayCount}
       pendingCount={pendingCount}
       monthCount={monthCount}
