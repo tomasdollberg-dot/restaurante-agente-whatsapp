@@ -13,6 +13,7 @@ function getServiceClient() {
 
 // Handles the full message processing after Twilio already received 200
 async function handleMessage(from: string, to: string, body: string) {
+  console.log('[WEBHOOK] handleMessage iniciado:', { from, to, bodyLength: body.length })
   const customerPhone = from.replace('whatsapp:', '')
   const twilioNumber = to
   const twilioNumberClean = to.replace('whatsapp:', '')
@@ -191,9 +192,10 @@ export async function POST(request: NextRequest) {
 
   // Responder 200 a Twilio inmediatamente para evitar retries por timeout.
   // Vercel mantiene la función viva hasta que handleMessage resuelva.
-  void handleMessage(from, to, body).catch((err) =>
-    console.error('[WEBHOOK] Error en procesamiento background:', err)
-  )
+  void handleMessage(from, to, body).catch((err) => {
+    console.error('[WEBHOOK] Error fatal en handleMessage:', err)
+    console.error('[WEBHOOK] Stack:', err?.stack)
+  })
 
   return new NextResponse('', { status: 200 })
 }
