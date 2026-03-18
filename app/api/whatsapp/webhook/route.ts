@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
         const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
 
         const mapsLine = restaurant.google_maps_url
-          ? `\n\nSi quieres dejarnos una reseña, nos ayudaría muchísimo: ${restaurant.google_maps_url}`
+          ? `\n\nSi quieres dejarnos una reseña o valoración, nos ayudaría muchísimo: ${restaurant.google_maps_url}`
           : ''
 
         await supabase.from('scheduled_messages').insert({
