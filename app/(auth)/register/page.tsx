@@ -58,6 +58,8 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [registered, setRegistered] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [acceptedComms, setAcceptedComms] = useState(false)
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -279,9 +281,46 @@ export default function RegisterPage() {
             <DarkInput id="password" name="password" type="password" placeholder="Mínimo 8 caracteres" value={form.password} onChange={handleChange} required minLength={8} />
           </div>
 
+          {/* Legal checkboxes */}
+          <div className="flex flex-col gap-3 pt-1">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                required
+                className="mt-0.5 shrink-0 h-4 w-4 rounded"
+                style={{ accentColor: '#b8922a' }}
+              />
+              <span className="text-xs leading-relaxed" style={{ color: 'rgba(245,240,232,0.55)' }}>
+                He leído y acepto los{' '}
+                <a href="/terminos" target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 transition-opacity hover:opacity-80" style={{ color: '#b8922a' }}>
+                  Términos de Servicio
+                </a>
+                {' '}y la{' '}
+                <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 transition-opacity hover:opacity-80" style={{ color: '#b8922a' }}>
+                  Política de Privacidad
+                </a>
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedComms}
+                onChange={(e) => setAcceptedComms(e.target.checked)}
+                className="mt-0.5 shrink-0 h-4 w-4 rounded"
+                style={{ accentColor: '#b8922a' }}
+              />
+              <span className="text-xs leading-relaxed" style={{ color: 'rgba(245,240,232,0.55)' }}>
+                Acepto recibir comunicaciones sobre novedades de Solera
+              </span>
+            </label>
+          </div>
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !acceptedTerms}
             className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
             style={{ backgroundColor: '#b8922a' }}
           >
