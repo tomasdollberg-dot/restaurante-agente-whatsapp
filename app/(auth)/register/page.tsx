@@ -217,24 +217,6 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Google button */}
-        <button
-          type="button"
-          onClick={handleGoogle}
-          className="w-full flex items-center justify-center gap-3 rounded-xl py-3 px-4 text-sm font-semibold text-gray-800 transition-opacity hover:opacity-90 active:opacity-75"
-          style={{ backgroundColor: '#fff' }}
-        >
-          {googleSvg}
-          Continuar con Google
-        </button>
-
-        {/* Separator */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          <span className="text-xs" style={{ color: 'rgba(245,240,232,0.35)' }}>o con email</span>
-          <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-        </div>
-
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {error && (
@@ -327,6 +309,28 @@ export default function RegisterPage() {
             {loading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
+
+        {/* Google button */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.07)' }} />
+            <span className="text-xs" style={{ color: 'rgba(245,240,232,0.3)' }}>o</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(255,255,255,0.07)' }} />
+          </div>
+          <button
+            type="button"
+            onClick={handleGoogle}
+            className="w-full flex items-center justify-center gap-3 rounded-xl py-3 px-4 text-sm font-medium transition-opacity hover:opacity-80 active:opacity-60"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(245,240,232,0.5)',
+            }}
+          >
+            {googleSvg}
+            Continuar con Google
+          </button>
+        </div>
 
         {/* Footer link */}
         <p className="text-center text-sm" style={{ color: 'rgba(245,240,232,0.35)' }}>
