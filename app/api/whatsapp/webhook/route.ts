@@ -148,21 +148,19 @@ export async function POST(request: NextRequest) {
       console.log('[WEBHOOK] Reserva creada:', reservationError ? 'ERROR: ' + reservationError.message : 'OK')
 
       if (!reservationError) {
-        // Programar mensaje de agradecimiento para el día siguiente de la reserva.
-        // setHours(8) en UTC = 10:00 hora española (UTC+2 en verano, UTC+1 en invierno aprox.)
-        const reservationDate = new Date(`${r.date}T00:00:00`)
-        const sendAt = new Date(reservationDate)
-        sendAt.setDate(sendAt.getDate() + 1)
-        sendAt.setHours(8, 0, 0, 0)
+        // Programar mensaje de agradecimiento basado en la hora de la reserva
+        const reservationDateTime = new Date(`${r.date}T${r.time}`)
+        const hoursToAdd = r.time < '17:00:00' ? 3 : 14
+        const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
 
         const mapsLine = restaurant.google_maps_url
-          ? `\n\nSi después de tu visita quieres dejarnos una reseña, nos ayudaría mucho: ${restaurant.google_maps_url}`
+          ? `\n\nSi quieres dejarnos una reseña, nos ayudaría muchísimo: ${restaurant.google_maps_url}`
           : ''
 
         await supabase.from('scheduled_messages').insert({
           restaurant_id: restaurant.id,
           customer_phone: customerPhone,
-          message: `Gracias por tu reserva, ${r.name}. Estamos deseando recibirte.${mapsLine}`,
+          message: `¡Nos encantó haberte visto, ${r.name}! Esperamos volver a recibirte pronto.${mapsLine}`,
           twilio_number: twilioNumber,
           send_at: sendAt.toISOString(),
         } as Record<string, unknown>)
