@@ -84,6 +84,7 @@ export default function RegisterPage() {
     })
 
     if (signUpError) {
+      console.log('[REGISTER] Error de Supabase:', signUpError.message, signUpError.status, JSON.stringify(signUpError))
       setError(mapAuthError(signUpError.message))
       setLoading(false)
       return
