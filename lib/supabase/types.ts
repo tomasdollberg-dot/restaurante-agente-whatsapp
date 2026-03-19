@@ -38,6 +38,8 @@ export interface RestaurantHours {
   day_of_week: number  // 0=Sunday ... 6=Saturday
   open_time: string | null   // "HH:MM"
   close_time: string | null  // "HH:MM"
+  open_time_2: string | null  // "HH:MM" second shift
+  close_time_2: string | null // "HH:MM" second shift
   is_closed: boolean
 }
 

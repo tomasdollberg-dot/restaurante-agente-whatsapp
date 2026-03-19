@@ -8,6 +8,8 @@ export async function saveHours(hours: Array<{
   day_of_week: number
   open_time: string | null
   close_time: string | null
+  open_time_2: string | null
+  close_time_2: string | null
   is_closed: boolean
 }>) {
   const supabase = await createClient()
