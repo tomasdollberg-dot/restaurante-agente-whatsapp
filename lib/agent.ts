@@ -3,8 +3,6 @@ import type { Restaurant, MenuItem, RestaurantHours, ConversationMessage } from 
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 
-const DAYS_ES = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
-
 function formatMenuForPrompt(items: MenuItem[]): string {
   if (!items.length) return 'El menú aún no está configurado.'
 
@@ -28,22 +26,11 @@ function formatMenuForPrompt(items: MenuItem[]): string {
     .join('\n\n')
 }
 
-function formatHoursForPrompt(hours: RestaurantHours[]): string {
-  if (!hours.length) return 'Horarios no configurados.'
-  return DAYS_ES.map((day, i) => {
-    const label = day.charAt(0).toUpperCase() + day.slice(1)
-    const h = hours.find((x) => x.day_of_week === i)
-    if (!h || h.is_closed) return `  ${label}: Cerrado`
-    return `  ${label}: ${h.open_time?.slice(0, 5)} - ${h.close_time?.slice(0, 5)}`
-  }).join('\n')
-}
-
-function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[], hours: RestaurantHours[]): string {
+function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[]): string {
   const today = new Date()
   const todayFormatted = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
   const todayISO = today.toISOString().split('T')[0]
   const menuText = formatMenuForPrompt(menu)
-  const hoursText = formatHoursForPrompt(hours)
 
   return `Hoy es ${todayFormatted} (${todayISO}).
 
@@ -52,16 +39,11 @@ Eres el asistente de WhatsApp de ${restaurant.name}. Respondes en español, de f
 ## INFORMACIÓN DEL RESTAURANTE
 ${menuText}
 
-## HORARIOS
-${hoursText}
-
 ## REGLAS DE COMPORTAMIENTO
 
 **Tono**: Profesional y cercano. Respuestas de máximo 2-3 líneas. Sin emojis decorativos (solo ⚠️ para alérgenos). Sin exclamaciones innecesarias.
 
-**Proceso interno**: Cualquier verificación de horarios o datos la haces internamente y en silencio. NUNCA lo expliques al cliente.
-
-**Reservas**: Cuando el cliente quiera reservar o pregunte disponibilidad, recoge los 4 datos en el mínimo de mensajes posible: nombre, fecha, hora y personas. Sin preguntar por notas especiales. Cuando tengas los 4 datos, confirma así:
+**Reservas**: Cuando el cliente quiera reservar, recoge los 4 datos en el mínimo de mensajes posible: nombre, fecha, hora y personas. Sin preguntar por notas especiales. Cuando tengas los 4 datos, confirma así:
 "Tu solicitud de reserva para el [fecha] a las [hora] para [X] personas ha sido recibida. El restaurante te confirmará en breve."
 Y emite el token: [CREAR_RESERVA: nombre="X" fecha="YYYY-MM-DD" hora="HH:MM" personas=N notas=""]
 
@@ -70,8 +52,6 @@ Y emite el token: [CREAR_RESERVA: nombre="X" fecha="YYYY-MM-DD" hora="HH:MM" per
 Solo esa frase exacta, seguida del token: [NOTIFICAR_DUENO: <motivo breve>]
 
 **Alérgenos**: Si el cliente pregunta por alérgenos de un plato, responde con la información del menú. Si no hay información, usa la frase de no saber.
-
-**Fuera de horario**: Si el cliente pide reserva en horario en que el restaurante está cerrado, di: "En ese horario no tenemos disponibilidad. Abrimos [horarios relevantes]."
 
 **Preguntas generales**: Responde solo con la información que tienes del restaurante. Si no tienes la información, usa la frase de no saber.`
 }
@@ -96,7 +76,7 @@ export async function processMessage(
   hours: RestaurantHours[],
   history: ConversationMessage[]
 ): Promise<AgentResponse> {
-  const systemPrompt = buildSystemPrompt(restaurant, menu, hours)
+  const systemPrompt = buildSystemPrompt(restaurant, menu)
 
   const messages: Anthropic.Messages.MessageParam[] = [
     ...history.slice(-10).map((m) => ({

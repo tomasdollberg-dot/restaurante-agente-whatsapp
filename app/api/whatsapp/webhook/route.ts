@@ -4,6 +4,17 @@ import { processMessage } from '@/lib/agent'
 import { sendWhatsAppMessage } from '@/lib/twilio'
 import type { Restaurant, MenuItem, RestaurantHours, Conversation, ConversationMessage } from '@/lib/supabase/types'
 
+function isRestaurantOpen(hours: RestaurantHours[], date: string, time: string): boolean {
+  // Use noon to avoid DST/timezone issues when getting day of week
+  const dayOfWeek = new Date(`${date}T12:00:00`).getDay()
+  const dayHours = hours.find((h) => h.day_of_week === dayOfWeek)
+  if (!dayHours || dayHours.is_closed) return false
+  const open = dayHours.open_time?.slice(0, 5)
+  const close = dayHours.close_time?.slice(0, 5)
+  if (!open || !close) return false
+  return time >= open && time <= close
+}
+
 function getServiceClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -130,6 +141,17 @@ export async function POST(request: NextRequest) {
         await sendWhatsAppMessage(
           customerPhone,
           'La fecha indicada ya ha pasado. ¿Para qué fecha quieres la reserva?',
+          twilioNumber
+        )
+        return new NextResponse('', { status: 200 })
+      }
+
+      // Validar que el restaurante esté abierto en ese horario
+      if (!isRestaurantOpen(hours, r.date, r.time)) {
+        console.log('[WEBHOOK] Restaurante cerrado en ese horario, rechazando reserva:', r.date, r.time)
+        await sendWhatsAppMessage(
+          customerPhone,
+          'Lo sentimos, no tenemos servicio en ese horario. Puedes consultarnos los horarios disponibles.',
           twilioNumber
         )
         return new NextResponse('', { status: 200 })
