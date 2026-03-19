@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, Users } from 'lucide-react'
 import { ReservationCard } from '@/components/dashboard/reservation-card'
 import { NewReservationDialog } from './new-reservation-dialog'
@@ -15,8 +16,16 @@ const filterBtns: { key: Filter; label: string }[] = [
 ]
 
 export function ReservationsClient({ reservations }: { reservations: Reservation[] }) {
+  const router = useRouter()
   const [filter, setFilter] = useState<Filter>('all')
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh()
+    }, 60000)
+    return () => clearInterval(interval)
+  }, [router])
 
   const filtered =
     filter === 'all' ? reservations : reservations.filter((r) => r.status === filter)

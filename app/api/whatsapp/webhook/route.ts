@@ -165,6 +165,15 @@ export async function POST(request: NextRequest) {
           send_at: sendAt.toISOString(),
         } as Record<string, unknown>)
         console.log('[WEBHOOK] Mensaje de agradecimiento programado para:', sendAt.toISOString())
+
+        if (restaurant.owner_phone) {
+          await sendWhatsAppMessage(
+            restaurant.owner_phone,
+            `*Solera* — Nueva solicitud de reserva:\n\n👤 ${r.name}\n📅 ${r.date} a las ${r.time}\n👥 ${r.partySize} personas\n\nConfirma o cancela en: solera-ia.vercel.app/dashboard/reservations`,
+            twilioNumber
+          )
+          console.log('[WEBHOOK] Dueño notificado de nueva reserva en:', restaurant.owner_phone)
+        }
       }
     }
 
