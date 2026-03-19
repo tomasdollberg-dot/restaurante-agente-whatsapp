@@ -23,7 +23,7 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
   useEffect(() => {
     const interval = setInterval(() => {
       router.refresh()
-    }, 60000)
+    }, 7200000)
     return () => clearInterval(interval)
   }, [router])
 
