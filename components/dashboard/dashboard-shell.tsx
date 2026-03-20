@@ -70,18 +70,18 @@ export function DashboardShell({
             >
               <Icon
                 className="h-5 w-5 mb-0.5"
-                style={{ color: isActive ? '#b8922a' : '#9ca3af' }}
+                style={{ color: isActive ? '#FF5C1A' : '#9ca3af' }}
               />
               <span
                 className="text-[10px] font-medium leading-none"
-                style={{ color: isActive ? '#b8922a' : '#9ca3af' }}
+                style={{ color: isActive ? '#FF5C1A' : '#9ca3af' }}
               >
                 {label}
               </span>
               {isActive && (
                 <span
                   className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-full"
-                  style={{ backgroundColor: '#b8922a' }}
+                  style={{ backgroundColor: '#FF5C1A' }}
                 />
               )}
             </Link>

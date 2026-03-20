@@ -31,14 +31,14 @@ export function TopBar({ todayCount, pendingCount, monthCount }: TopBarProps) {
       className="hidden md:flex items-center justify-between px-8 py-4 shrink-0"
       style={{
         backgroundColor: '#0f0c08',
-        borderBottom: '1px solid rgba(184,146,42,0.1)',
+        borderBottom: '1px solid rgba(255,92,26,0.1)',
       }}
     >
       {/* Left: date + page title */}
       <div>
         <p
           className="text-xs font-medium capitalize mb-0.5"
-          style={{ color: '#b8922a' }}
+          style={{ color: '#FF5C1A' }}
         >
           {dateLabel}
         </p>

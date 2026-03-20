@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
         if (restaurant.owner_phone) {
           await sendWhatsAppMessage(
             restaurant.owner_phone,
-            `*Solera* — Nueva solicitud de reserva:\n\n👤 ${r.name}\n📅 ${r.date} a las ${r.time}\n👥 ${r.partySize} personas\n\nConfirma o cancela en: solera-ia.vercel.app/dashboard/reservations`,
+            `*Chispoa* — Nueva solicitud de reserva:\n\n👤 ${r.name}\n📅 ${r.date} a las ${r.time}\n👥 ${r.partySize} personas\n\nConfirma o cancela en: solera-ia.vercel.app/dashboard/reservations`,
             twilioNumber
           )
           console.log('[WEBHOOK] Dueño notificado de nueva reserva en:', restaurant.owner_phone)
@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
     if (result.shouldNotifyOwner) {
       await sendWhatsAppMessage(
         restaurant.owner_phone,
-        `*Solera* — Un cliente (${customerPhone}) preguntó algo que no supe responder:\n\n"${result.shouldNotifyOwner}"\n\nPuedes contactarle directamente.`,
+        `*Chispoa* — Un cliente (${customerPhone}) preguntó algo que no supe responder:\n\n"${result.shouldNotifyOwner}"\n\nPuedes contactarle directamente.`,
         twilioNumber
       )
       console.log('[WEBHOOK] Dueño notificado en:', restaurant.owner_phone)

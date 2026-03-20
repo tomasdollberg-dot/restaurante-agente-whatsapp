@@ -38,21 +38,26 @@ export default function ForgotPasswordPage() {
       >
         <div
           className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.18) 0%, transparent 70%)' }}
         />
         <div
           className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.12) 0%, transparent 70%)' }}
         />
 
         <div className="relative w-full max-w-sm flex flex-col items-center text-center gap-6">
-          <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
-            SOLERA
-          </p>
+          <div className="flex items-center gap-2">
+            <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+                <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+          </div>
 
           <div
             className="flex h-20 w-20 items-center justify-center rounded-2xl text-4xl"
-            style={{ border: '1px solid rgba(184,146,42,0.25)', backgroundColor: 'rgba(184,146,42,0.06)' }}
+            style={{ border: '1px solid rgba(255,92,26,0.25)', backgroundColor: 'rgba(255,92,26,0.06)' }}
           >
             ✉️
           </div>
@@ -69,11 +74,11 @@ export default function ForgotPasswordPage() {
           <div
             className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
             style={{
-              backgroundColor: 'rgba(184,146,42,0.10)',
-              border: '1px solid rgba(184,146,42,0.3)',
+              backgroundColor: 'rgba(255,92,26,0.10)',
+              border: '1px solid rgba(255,92,26,0.3)',
             }}
           >
-            <span style={{ color: '#b8922a' }}>✉</span>
+            <span style={{ color: '#FF5C1A' }}>✉</span>
             <span style={{ color: '#f5f0e8' }}>{email}</span>
           </div>
 
@@ -84,7 +89,7 @@ export default function ForgotPasswordPage() {
               border: '1px solid rgba(255,255,255,0.07)',
             }}
           >
-            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#b8922a' }}>
+            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#FF5C1A' }}>
               A continuación
             </p>
             {[
@@ -95,7 +100,7 @@ export default function ForgotPasswordPage() {
               <div key={i} className="flex items-center gap-3">
                 <span
                   className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-                  style={{ backgroundColor: 'rgba(184,146,42,0.2)', color: '#b8922a' }}
+                  style={{ backgroundColor: 'rgba(255,92,26,0.2)', color: '#FF5C1A' }}
                 >
                   {i + 1}
                 </span>
@@ -116,7 +121,7 @@ export default function ForgotPasswordPage() {
                 })
               }}
               className="font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"
-              style={{ color: '#b8922a' }}
+              style={{ color: '#FF5C1A' }}
             >
               Reenviar email
             </button>
@@ -133,19 +138,24 @@ export default function ForgotPasswordPage() {
     >
       <div
         className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.18) 0%, transparent 70%)' }}
       />
       <div
         className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.12) 0%, transparent 70%)' }}
       />
 
       <div className="relative w-full max-w-sm flex flex-col gap-8">
         {/* Logo */}
         <div className="flex flex-col items-center gap-6">
-          <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
-            SOLERA
-          </p>
+          <div className="flex items-center gap-2">
+            <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+                <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+          </div>
           <div className="text-center">
             <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}>
               Restablecer contraseña
@@ -189,7 +199,7 @@ export default function ForgotPasswordPage() {
                 border: '1px solid rgba(255,255,255,0.1)',
                 color: '#f5f0e8',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#FF5C1A')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
             />
           </div>
@@ -198,7 +208,7 @@ export default function ForgotPasswordPage() {
             type="submit"
             disabled={loading}
             className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
-            style={{ backgroundColor: '#b8922a' }}
+            style={{ backgroundColor: '#FF5C1A' }}
           >
             {loading ? 'Enviando...' : 'Enviar enlace'}
           </button>
@@ -209,7 +219,7 @@ export default function ForgotPasswordPage() {
           <Link
             href="/login"
             className="font-semibold transition-opacity hover:opacity-80"
-            style={{ color: '#b8922a' }}
+            style={{ color: '#FF5C1A' }}
           >
             ← Volver al inicio de sesión
           </Link>

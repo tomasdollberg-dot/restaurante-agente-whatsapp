@@ -10,14 +10,19 @@ export default function TerminosPage() {
         <Link
           href="/register"
           className="inline-flex items-center gap-2 text-sm font-medium mb-10 transition-opacity hover:opacity-70"
-          style={{ color: '#b8922a' }}
+          style={{ color: '#FF5C1A' }}
         >
           ← Volver
         </Link>
 
-        <p className="text-xs font-bold tracking-[0.35em] uppercase mb-3" style={{ color: '#b8922a' }}>
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2 mb-3">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
         <h1 className="text-3xl font-extrabold mb-2" style={{ letterSpacing: '-0.02em' }}>
           Términos de Servicio
         </h1>
@@ -29,7 +34,7 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>1. Objeto</h2>
             <p className="text-sm">
-              El presente contrato regula la prestación del servicio Solera, un agente de inteligencia artificial para la gestión de reservas y atención al cliente vía WhatsApp, dirigido a establecimientos de restauración.
+              El presente contrato regula la prestación del servicio Chispoa, un agente de inteligencia artificial para la gestión de reservas y atención al cliente vía WhatsApp, dirigido a establecimientos de restauración.
             </p>
           </section>
 
@@ -57,14 +62,14 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>5. Naturaleza del servicio</h2>
             <p className="text-sm">
-              El servicio se presta "tal cual" (as-is). Solera no garantiza resultados concretos en términos de reservas, satisfacción del cliente o ingresos del establecimiento. El funcionamiento del agente depende de terceros (Twilio, Anthropic, Supabase, Vercel) cuyas incidencias quedan fuera del control de Solera.
+              El servicio se presta "tal cual" (as-is). Chispoa no garantiza resultados concretos en términos de reservas, satisfacción del cliente o ingresos del establecimiento. El funcionamiento del agente depende de terceros (Twilio, Anthropic, Supabase, Vercel) cuyas incidencias quedan fuera del control de Chispoa.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>6. Limitación de responsabilidad</h2>
             <p className="text-sm">
-              En ningún caso la responsabilidad total de Solera frente al cliente podrá exceder el importe de una mensualidad abonada. Solera no será responsable de daños indirectos, pérdida de datos, lucro cesante ni daños derivados del uso o la imposibilidad de uso del servicio.
+              En ningún caso la responsabilidad total de Chispoa frente al cliente podrá exceder el importe de una mensualidad abonada. Chispoa no será responsable de daños indirectos, pérdida de datos, lucro cesante ni daños derivados del uso o la imposibilidad de uso del servicio.
             </p>
           </section>
 
@@ -78,14 +83,14 @@ export default function TerminosPage() {
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>8. Propiedad intelectual</h2>
             <p className="text-sm">
-              Todo el software, diseño, marca y contenidos de Solera son propiedad exclusiva de Tomás Francisco Dollberg. El cliente recibe una licencia de uso no exclusiva e intransferible mientras el contrato esté vigente.
+              Todo el software, diseño, marca y contenidos de Chispoa son propiedad exclusiva de Tomás Francisco Dollberg. El cliente recibe una licencia de uso no exclusiva e intransferible mientras el contrato esté vigente.
             </p>
           </section>
 
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>9. Modificaciones</h2>
             <p className="text-sm">
-              Solera se reserva el derecho a modificar estos términos con un preaviso de 15 días. Si el cliente no acepta los nuevos términos, podrá resolver el contrato sin penalización dentro de ese plazo.
+              Chispoa se reserva el derecho a modificar estos términos con un preaviso de 15 días. Si el cliente no acepta los nuevos términos, podrá resolver el contrato sin penalización dentro de ese plazo.
             </p>
           </section>
 

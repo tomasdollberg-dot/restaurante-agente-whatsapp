@@ -85,20 +85,22 @@ export default function LoginPage() {
         {/* Decorative circles */}
         <div
           className="pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.18) 0%, transparent 70%)' }}
         />
         <div
           className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.12) 0%, transparent 70%)' }}
         />
 
         {/* Logo */}
-        <p
-          className="relative text-xs font-bold tracking-[0.35em] uppercase z-10"
-          style={{ color: '#b8922a' }}
-        >
-          SOLERA
-        </p>
+        <div className="relative z-10 flex items-center gap-2">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
 
         {/* Central block */}
         <div className="relative z-10 flex flex-col gap-10">
@@ -124,7 +126,7 @@ export default function LoginPage() {
               <div key={stat.label} className="flex flex-col gap-1">
                 <span
                   className="text-2xl font-bold"
-                  style={{ color: '#b8922a', letterSpacing: '-0.02em' }}
+                  style={{ color: '#FF5C1A', letterSpacing: '-0.02em' }}
                 >
                   {stat.value}
                 </span>
@@ -162,21 +164,23 @@ export default function LoginPage() {
         {/* Mobile-only decorative circles */}
         <div
           className="md:hidden pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.18) 0%, transparent 70%)' }}
         />
         <div
           className="md:hidden pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.12) 0%, transparent 70%)' }}
         />
 
         <div className="relative w-full max-w-sm flex flex-col gap-8">
           {/* Mobile logo */}
-          <p
-            className="md:hidden text-xs font-bold tracking-[0.35em] uppercase text-center"
-            style={{ color: '#b8922a' }}
-          >
-            SOLERA
-          </p>
+          <div className="md:hidden flex items-center justify-center gap-2">
+            <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+                <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+          </div>
 
           {/* Header */}
           <div className="text-center">
@@ -225,7 +229,7 @@ export default function LoginPage() {
                   color: '#f5f0e8',
                   fontSize: '16px',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#FF5C1A')}
                 onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
               />
             </div>
@@ -238,7 +242,7 @@ export default function LoginPage() {
                 <Link
                   href="/forgot-password"
                   className="text-xs font-medium transition-opacity hover:opacity-80"
-                  style={{ color: '#b8922a' }}
+                  style={{ color: '#FF5C1A' }}
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
@@ -259,7 +263,7 @@ export default function LoginPage() {
                     color: '#f5f0e8',
                     fontSize: '16px',
                   }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = '#FF5C1A')}
                   onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
                 />
                 <button
@@ -279,7 +283,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
-              style={{ backgroundColor: '#b8922a' }}
+              style={{ backgroundColor: '#FF5C1A' }}
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </button>
@@ -313,7 +317,7 @@ export default function LoginPage() {
             <Link
               href="/register"
               className="font-semibold transition-opacity hover:opacity-80"
-              style={{ color: '#b8922a' }}
+              style={{ color: '#FF5C1A' }}
             >
               Regístrate
             </Link>

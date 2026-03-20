@@ -34,12 +34,14 @@ export function Sidebar({ restaurantName, whatsappNumber, onClose }: { restauran
     >
       {/* Logo + restaurant name */}
       <div className="px-6 pt-8 pb-6">
-        <p
-          className="text-xs font-bold tracking-[0.3em] uppercase"
-          style={{ color: '#b8922a' }}
-        >
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2">
+          <div style={{ width: '22px', height: '22px', background: '#FF5C1A', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '13px', height: '13px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '14px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
         {restaurantName && (
           <p
             className="mt-1.5 text-xs truncate"
@@ -62,8 +64,8 @@ export function Sidebar({ restaurantName, whatsappNumber, onClose }: { restauran
               className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors relative"
               style={{
                 color: isActive ? '#f5f0e8' : 'rgba(245,240,232,0.4)',
-                backgroundColor: isActive ? 'rgba(184,146,42,0.15)' : 'transparent',
-                borderLeft: isActive ? '2px solid #b8922a' : '2px solid transparent',
+                backgroundColor: isActive ? 'rgba(255,92,26,0.15)' : 'transparent',
+                borderLeft: isActive ? '2px solid #FF5C1A' : '2px solid transparent',
               }}
             >
               <Icon className="h-4 w-4 shrink-0" />

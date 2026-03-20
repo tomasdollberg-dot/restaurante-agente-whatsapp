@@ -10,14 +10,19 @@ export default function PrivacidadPage() {
         <Link
           href="/register"
           className="inline-flex items-center gap-2 text-sm font-medium mb-10 transition-opacity hover:opacity-70"
-          style={{ color: '#b8922a' }}
+          style={{ color: '#FF5C1A' }}
         >
           ← Volver
         </Link>
 
-        <p className="text-xs font-bold tracking-[0.35em] uppercase mb-3" style={{ color: '#b8922a' }}>
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2 mb-3">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
         <h1 className="text-3xl font-extrabold mb-2" style={{ letterSpacing: '-0.02em' }}>
           Política de Privacidad
         </h1>
@@ -71,7 +76,7 @@ export default function PrivacidadPage() {
           <section>
             <h2 className="text-base font-bold mb-2" style={{ color: '#f5f0e8' }}>7. Modificaciones</h2>
             <p className="text-sm">
-              Solera se reserva el derecho a actualizar esta política para adaptarla a cambios normativos o del servicio. Cualquier modificación relevante se comunicará al cliente con antelación suficiente.
+              Chispoa se reserva el derecho a actualizar esta política para adaptarla a cambios normativos o del servicio. Cualquier modificación relevante se comunicará al cliente con antelación suficiente.
             </p>
           </section>
         </div>

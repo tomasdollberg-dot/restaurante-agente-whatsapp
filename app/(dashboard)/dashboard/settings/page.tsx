@@ -32,9 +32,9 @@ export default async function SettingsPage() {
       {isNew && (
         <div
           className="rounded-xl px-4 py-3 text-sm font-medium"
-          style={{ backgroundColor: '#1a1610', color: '#b8922a' }}
+          style={{ backgroundColor: '#1a1610', color: '#FF5C1A' }}
         >
-          👋 Bienvenido a Solera. Completa tu perfil para activar el agente.
+          👋 Bienvenido a Chispoa. Completa tu perfil para activar el agente.
         </div>
       )}
       <div>

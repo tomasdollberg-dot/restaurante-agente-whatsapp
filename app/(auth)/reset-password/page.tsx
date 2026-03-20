@@ -26,11 +26,11 @@ const pageShell = (children: React.ReactNode) => (
   >
     <div
       className="pointer-events-none absolute -top-40 -left-40 h-96 w-96 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.18) 0%, transparent 70%)' }}
+      style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.18) 0%, transparent 70%)' }}
     />
     <div
       className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%)' }}
+      style={{ background: 'radial-gradient(circle, rgba(255,92,26,0.12) 0%, transparent 70%)' }}
     />
     {children}
   </div>
@@ -97,9 +97,14 @@ export default function ResetPasswordPage() {
   if (!ready && !expired) {
     return pageShell(
       <div className="relative flex flex-col items-center gap-4">
-        <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
         <p className="text-sm" style={{ color: 'rgba(245,240,232,0.4)' }}>Verificando enlace...</p>
       </div>
     )
@@ -108,9 +113,14 @@ export default function ResetPasswordPage() {
   if (expired && !ready) {
     return pageShell(
       <div className="relative w-full max-w-sm flex flex-col items-center text-center gap-6">
-        <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
 
         <div
           className="flex h-20 w-20 items-center justify-center rounded-2xl text-4xl"
@@ -131,13 +141,13 @@ export default function ResetPasswordPage() {
         <Link
           href="/forgot-password"
           className="w-full rounded-xl py-3 text-sm font-bold text-white text-center transition-opacity hover:opacity-90 active:opacity-75"
-          style={{ backgroundColor: '#b8922a' }}
+          style={{ backgroundColor: '#FF5C1A' }}
         >
           Solicitar nuevo enlace
         </Link>
 
         <p className="text-sm" style={{ color: 'rgba(245,240,232,0.35)' }}>
-          <Link href="/login" className="font-semibold transition-opacity hover:opacity-80" style={{ color: '#b8922a' }}>
+          <Link href="/login" className="font-semibold transition-opacity hover:opacity-80" style={{ color: '#FF5C1A' }}>
             ← Volver al inicio de sesión
           </Link>
         </p>
@@ -149,9 +159,14 @@ export default function ResetPasswordPage() {
     <div className="relative w-full max-w-sm flex flex-col gap-8">
       {/* Logo + header */}
       <div className="flex flex-col items-center gap-6">
-        <p className="text-xs font-bold tracking-[0.35em] uppercase" style={{ color: '#b8922a' }}>
-          SOLERA
-        </p>
+        <div className="flex items-center gap-2">
+          <div style={{ width: '24px', height: '24px', background: '#FF5C1A', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg viewBox="0 0 16 16" fill="none" style={{ width: '14px', height: '14px' }}>
+              <path d="M9 2L4 9H8L6 14L13 7H9L9 2z" fill="white" stroke="white" strokeWidth="0.5" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Unbounded', sans-serif", fontWeight: 900, fontSize: '16px', color: '#f5f0e8', letterSpacing: '-0.02em' }}>Chispoa</span>
+        </div>
         <div className="text-center">
           <h1 className="text-3xl leading-tight" style={{ color: '#f5f0e8', fontWeight: 800, letterSpacing: '-0.02em' }}>
             Nueva contraseña
@@ -198,7 +213,7 @@ export default function ResetPasswordPage() {
                 border: '1px solid rgba(255,255,255,0.1)',
                 color: '#f5f0e8',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#FF5C1A')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
             />
             <button
@@ -234,7 +249,7 @@ export default function ResetPasswordPage() {
                 border: '1px solid rgba(255,255,255,0.1)',
                 color: '#f5f0e8',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = '#b8922a')}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#FF5C1A')}
               onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
             />
             <button
@@ -254,7 +269,7 @@ export default function ResetPasswordPage() {
           type="submit"
           disabled={loading}
           className="w-full rounded-xl py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 active:opacity-75 disabled:opacity-50 mt-1"
-          style={{ backgroundColor: '#b8922a' }}
+          style={{ backgroundColor: '#FF5C1A' }}
         >
           {loading ? 'Guardando...' : 'Guardar contraseña'}
         </button>
