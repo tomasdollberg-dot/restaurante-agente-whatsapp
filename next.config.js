@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', 'solera-ia.vercel.app'],
+      allowedOrigins: ['localhost:3000', 'chispoa-ia.vercel.app'],
     },
   },
 }
