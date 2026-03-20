@@ -476,3 +476,61 @@ body::after {
 /* REVEAL */
 .rev { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
 .rev.on { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+
+@media (max-width: 768px) {
+  /* NAV */
+  .nav-links { display: none; }
+  .landing-nav { padding: 0 24px; }
+  .wrap { padding: 0 24px; }
+
+  /* HERO */
+  .hero { grid-template-columns: 1fr; padding: 48px 0 40px; gap: 32px; }
+  .hero-title { font-size: clamp(40px, 10vw, 56px); }
+  .hero-btns { flex-direction: column; align-items: flex-start; }
+  .hero-stats { gap: 20px; }
+
+  /* STEPS */
+  .steps { grid-template-columns: 1fr 1fr; }
+  .step:nth-child(1) { border-radius: 8px 0 0 0; }
+  .step:nth-child(2) { border-radius: 0 8px 0 0; }
+  .step:nth-child(3) { border-radius: 0 0 0 8px; }
+  .step:nth-child(4) { border-radius: 0 0 8px 0; }
+
+  /* FEATURES */
+  .features-grid { grid-template-columns: 1fr; }
+
+  /* REVIEWS */
+  .reviews-block { grid-template-columns: 1fr; padding: 40px 28px; gap: 32px; }
+  .rb-title { font-size: 26px; }
+
+  /* VALOR + TESTIMONIALS */
+  .valor-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+
+  /* FRASE GRANDE */
+  .frase-grande { flex-direction: column; padding: 40px 28px; gap: 24px; }
+
+  /* PRICING */
+  .pricing-wrap { grid-template-columns: 1fr; }
+  .price-card { padding: 32px 24px; }
+
+  /* CTA FINAL */
+  .cta-final { padding: 48px 28px; margin: 48px 0; }
+  .ctaf-btn { display: block; }
+
+  /* FOOTER */
+  .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+  .footer-meta { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  /* STEPS */
+  .steps { grid-template-columns: 1fr; }
+  .step:nth-child(1) { border-radius: 8px 8px 0 0; }
+  .step:nth-child(2) { border-radius: 0; }
+  .step:nth-child(3) { border-radius: 0; }
+  .step:nth-child(4) { border-radius: 0 0 8px 8px; }
+}
