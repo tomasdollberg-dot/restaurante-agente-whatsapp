@@ -199,7 +199,49 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 7. Notificar al dueño si el agente no sabe responder
+    // 7. Cancelar reserva si el agente lo indica
+    if (result.shouldCancelReservation) {
+      const c = result.shouldCancelReservation
+
+      const { data: reservationToCancel } = await supabase
+        .from('reservations')
+        .select('id')
+        .eq('restaurant_id', restaurant.id)
+        .eq('customer_phone', customerPhone)
+        .eq('reservation_date', c.date)
+        .eq('reservation_time', c.time)
+        .in('status', ['pending', 'confirmed'])
+        .limit(1)
+        .maybeSingle()
+
+      if (reservationToCancel) {
+        await supabase
+          .from('reservations')
+          .update({ status: 'cancelled' })
+          .eq('id', (reservationToCancel as Record<string, unknown>).id)
+
+        // Eliminar mensaje de agradecimiento programado pendiente
+        await supabase
+          .from('scheduled_messages')
+          .delete()
+          .eq('restaurant_id', restaurant.id)
+          .eq('customer_phone', customerPhone)
+          .eq('sent', false)
+          .gt('send_at', new Date().toISOString())
+
+        if (restaurant.owner_phone) {
+          await sendWhatsAppMessage(
+            restaurant.owner_phone,
+            `*Chispoa* — Cancelación de reserva:\n\n👤 ${c.name}\n📅 ${c.date} a las ${c.time}\n\nEl cliente ha cancelado su reserva.`,
+            twilioNumber
+          )
+          console.log('[WEBHOOK] Dueño notificado de cancelación de reserva')
+        }
+      }
+      console.log('[WEBHOOK] Reserva cancelada:', reservationToCancel ? 'OK' : 'no encontrada')
+    }
+
+    // 9. Notificar al dueño si el agente no sabe responder
     if (result.shouldNotifyOwner) {
       await sendWhatsAppMessage(
         restaurant.owner_phone,
@@ -209,7 +251,7 @@ export async function POST(request: NextRequest) {
       console.log('[WEBHOOK] Dueño notificado en:', restaurant.owner_phone)
     }
 
-    // 8. Responder al cliente
+    // 10. Responder al cliente
     if (result.message) {
       console.log('[WEBHOOK] Enviando respuesta al cliente...')
       await sendWhatsAppMessage(customerPhone, result.message, twilioNumber)

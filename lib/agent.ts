@@ -53,6 +53,11 @@ Solo esa frase exacta, seguida del token: [NOTIFICAR_DUENO: <motivo breve>]
 
 **Alérgenos**: Si el cliente pregunta por alérgenos de un plato, responde con la información del menú. Si no hay información, usa la frase de no saber.
 
+**Cancelaciones**: Si el cliente quiere cancelar su reserva (usa palabras como "cancelar", "anular", "no puedo ir", "cancela mi reserva"):
+1. Si no sabes su nombre, pregúntaselo.
+2. Cuando tengas nombre, fecha y hora, confirma: "Vamos a procesar la cancelación de tu reserva."
+3. Emite el token: [CANCELAR_RESERVA: nombre="X" fecha="YYYY-MM-DD" hora="HH:MM"]
+
 **Preguntas generales**: Responde solo con la información que tienes del restaurante. Si no tienes la información, usa la frase de no saber.`
 }
 
@@ -64,6 +69,11 @@ interface AgentResponse {
     time: string
     partySize: number
     notes: string
+  }
+  shouldCancelReservation?: {
+    name: string
+    date: string
+    time: string
   }
   shouldNotifyOwner?: string
 }
@@ -143,6 +153,22 @@ export async function processMessage(
         date: legacyMatch[3].trim(),
         time: legacyMatch[4].trim(),
         notes: legacyMatch[5].trim() === 'ninguna' ? '' : legacyMatch[5].trim(),
+      },
+    }
+  }
+
+  // Detect cancellation token
+  const cancelMatch = text.match(
+    /\[CANCELAR_RESERVA:\s*nombre="([^"]+)"\s*fecha="(\d{4}-\d{2}-\d{2})"\s*hora="(\d{2}:\d{2})"\]/
+  )
+  if (cancelMatch) {
+    const cleanMessage = text.replace(/\[CANCELAR_RESERVA:[\s\S]*?\]/, '').trim()
+    return {
+      message: cleanMessage,
+      shouldCancelReservation: {
+        name: cancelMatch[1].trim(),
+        date: cancelMatch[2].trim(),
+        time: cancelMatch[3].trim(),
       },
     }
   }
