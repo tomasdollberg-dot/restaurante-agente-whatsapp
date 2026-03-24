@@ -51,7 +51,7 @@ export default function LandingPage() {
               NINGUNA<br />RESERVA<br /><span className="hi">SE PIERDE.</span>
             </div>
             <div className="hero-sub">
-              Chispoa atiende el WhatsApp de tu restaurante mientras tú sirves en mesa. Reservas, alérgenos, horarios — gestionados al instante, las 24 horas del día.
+              Chispoa atiende el WhatsApp de tu restaurante mientras tú te encargas de lo esencial. Gestiona reservas, información sobre alérgenos y horarios al instante, durante las 24 horas del día.
             </div>
             <div className="hero-btns">
               <Link href="/register" className="btn-main">Prueba gratis 14 días →</Link>
