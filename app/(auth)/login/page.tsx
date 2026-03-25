@@ -70,7 +70,7 @@ export default function LoginPage() {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: 'https://solera-ia.vercel.app/auth/callback' },
+      options: { redirectTo: 'https://chispoa-ia.vercel.app/auth/callback' },
     })
   }
 
