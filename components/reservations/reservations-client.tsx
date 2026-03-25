@@ -81,8 +81,8 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
       {/* FAB */}
       <button
         onClick={() => setDialogOpen(true)}
-        className="fixed bottom-20 right-4 md:bottom-6 z-40 h-14 w-14 rounded-full shadow-lg flex items-center justify-center transition-transform active:scale-95"
-        style={{ backgroundColor: '#b8922a' }}
+        className="fixed right-4 md:bottom-6 z-40 h-14 w-14 rounded-full shadow-lg flex items-center justify-center transition-transform active:scale-95"
+        style={{ backgroundColor: '#b8922a', bottom: 'calc(64px + env(safe-area-inset-bottom) + 16px)' }}
         aria-label="Nueva reserva"
       >
         <Plus className="h-6 w-6 text-white" />

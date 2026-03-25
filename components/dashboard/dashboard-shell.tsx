@@ -52,13 +52,16 @@ export function DashboardShell({
         />
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
+        <main className="flex-1 overflow-y-auto md:pb-0" style={{ paddingBottom: 'calc(64px + env(safe-area-inset-bottom))' }}>
           <div className="p-4 md:p-8">{children}</div>
         </main>
       </div>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 flex bg-white border-t border-gray-200 md:hidden">
+      <nav
+        className="fixed bottom-0 inset-x-0 z-50 flex bg-white border-t border-gray-200 md:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
         {tabs.map(({ href, label, icon: Icon }) => {
           const isActive =
             href === '/dashboard' ? pathname === href : pathname.startsWith(href)
@@ -66,14 +69,16 @@ export function DashboardShell({
             <Link
               key={href}
               href={href}
-              className="flex flex-1 flex-col items-center justify-center pt-2 pb-1 relative"
+              className="flex flex-1 flex-col items-center justify-center relative"
+              style={{ minHeight: '64px', minWidth: '44px' }}
             >
               <Icon
-                className="h-5 w-5 mb-0.5"
+                size={28}
+                className="mb-0.5"
                 style={{ color: isActive ? '#FF5C1A' : '#9ca3af' }}
               />
               <span
-                className="text-[10px] font-medium leading-none"
+                className="text-xs font-medium leading-none"
                 style={{ color: isActive ? '#FF5C1A' : '#9ca3af' }}
               >
                 {label}
