@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
         if (restaurant.owner_phone) {
           await sendWhatsAppMessage(
             restaurant.owner_phone,
-            `*Chispoa* — Nueva solicitud de reserva:\n\n👤 ${r.name}\n📅 ${r.date} a las ${r.time}\n👥 ${r.partySize} personas\n\nConfirma o cancela en: chispoa-ia.vercel.app/dashboard/reservations`,
+            `*Chispoa* — Nueva solicitud de reserva:\n\n👤 ${r.name}\n📅 ${r.date} a las ${r.time}\n👥 ${r.partySize} personas\n\nConfirma o cancela aquí:\nhttps://chispoa-ia.vercel.app/dashboard/reservations`,
             twilioNumber
           )
           console.log('[WEBHOOK] Dueño notificado de nueva reserva en:', restaurant.owner_phone)
