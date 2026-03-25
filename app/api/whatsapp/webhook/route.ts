@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         console.log('[WEBHOOK] Restaurante cerrado en ese horario, rechazando reserva:', r.date, r.time)
         await sendWhatsAppMessage(
           customerPhone,
-          'Lo sentimos, no tenemos servicio en ese horario. Puedes consultarnos los horarios disponibles.',
+          'En ese horario no tenemos servicio. Puedes consultarnos los horarios disponibles.',
           twilioNumber
         )
         return new NextResponse('', { status: 200 })
