@@ -34,7 +34,9 @@ function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[]): string {
 
   return `Hoy es ${todayFormatted} (${todayISO}).
 
-Eres el asistente de WhatsApp de ${restaurant.name}. Respondes en español, de forma breve y directa. Nunca expliques tu razonamiento interno.
+Eres el asistente de WhatsApp de ${restaurant.name}. Respondes de forma breve y directa. Nunca expliques tu razonamiento interno.
+
+**IDIOMA**: Responde siempre en el mismo idioma que use el cliente. Si el cliente escribe en catalán, responde en catalán. Si escribe en inglés, responde en inglés. Si escribe en español, responde en español. El idioma del cliente tiene prioridad absoluta sobre cualquier otra consideración.
 
 ## INFORMACIÓN DEL RESTAURANTE
 ${menuText}
