@@ -27,8 +27,31 @@ export async function updateReservationStatus(id: string, status: ReservationSta
 
   if (error) return { error: error.message }
 
-  // Send WhatsApp notification to the customer
   const r = reservationData as Reservation & { restaurants: Pick<Restaurant, 'owner_id' | 'name' | 'whatsapp_number'> }
+
+  // Auto-cancel any previous reservation from same customer on same date
+  if (status === 'confirmed') {
+    const { data: previousReservation } = await supabase
+      .from('reservations')
+      .select('id')
+      .eq('restaurant_id', r.restaurant_id)
+      .eq('customer_phone', r.customer_phone)
+      .eq('reservation_date', r.reservation_date)
+      .in('status', ['confirmed', 'pending'])
+      .neq('id', id)
+      .limit(1)
+      .maybeSingle()
+
+    if (previousReservation) {
+      await supabase
+        .from('reservations')
+        .update({ status: 'cancelled' } as Record<string, unknown>)
+        .eq('id', (previousReservation as Record<string, unknown>).id)
+      console.log('[RESERVA] Reserva anterior cancelada por modificación:', (previousReservation as Record<string, unknown>).id)
+    }
+  }
+
+  // Send WhatsApp notification to the customer
   const restaurantName = r.restaurants.name.trim()
   const twilioFrom = r.restaurants.whatsapp_number ?? process.env.TWILIO_WHATSAPP_NUMBER!
 
