@@ -13,7 +13,7 @@ export async function updateReservationStatus(id: string, status: ReservationSta
   // Fetch reservation + restaurant in one query for auth check and notification data
   const { data: reservationData } = await supabase
     .from('reservations')
-    .select('*, restaurants!inner(owner_id, name, whatsapp_number)')
+    .select('*, restaurants!inner(owner_id, name, whatsapp_number, google_maps_url)')
     .eq('id', id)
     .eq('restaurants.owner_id', user.id)
     .maybeSingle()
@@ -27,7 +27,10 @@ export async function updateReservationStatus(id: string, status: ReservationSta
 
   if (error) return { error: error.message }
 
-  const r = reservationData as Reservation & { restaurants: Pick<Restaurant, 'owner_id' | 'name' | 'whatsapp_number'> }
+  const r = reservationData as Reservation & { restaurants: Pick<Restaurant, 'owner_id' | 'name' | 'whatsapp_number' | 'google_maps_url'> }
+
+  const restaurantName = r.restaurants.name.trim()
+  const twilioFrom = r.restaurants.whatsapp_number ?? process.env.TWILIO_WHATSAPP_NUMBER!
 
   // Auto-cancel any previous reservation from same customer on same date
   if (status === 'confirmed') {
@@ -49,11 +52,40 @@ export async function updateReservationStatus(id: string, status: ReservationSta
         .eq('id', (previousReservation as Record<string, unknown>).id)
       console.log('[RESERVA] Reserva anterior cancelada por modificación:', (previousReservation as Record<string, unknown>).id)
     }
+
+    // Schedule review message only when confirming, avoiding duplicates
+    const { data: existingScheduled } = await supabase
+      .from('scheduled_messages')
+      .select('id')
+      .eq('restaurant_id', r.restaurant_id)
+      .eq('customer_phone', r.customer_phone)
+      .eq('sent', false)
+      .limit(1)
+      .maybeSingle()
+
+    if (!existingScheduled) {
+      const reservationDateTime = new Date(`${r.reservation_date}T${r.reservation_time}`)
+      const hoursToAdd = r.reservation_time < '17:00:00' ? 3 : 14
+      const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
+
+      const mapsLine = r.restaurants.google_maps_url
+        ? `\n\nSi quieres dejarnos una reseña o valoración, nos ayudaría muchísimo: ${r.restaurants.google_maps_url}`
+        : ''
+
+      await supabase.from('scheduled_messages').insert({
+        restaurant_id: r.restaurant_id,
+        customer_phone: r.customer_phone,
+        message: `¡Nos encantó haberte visto, ${r.customer_name}! Esperamos volver a recibirte pronto.${mapsLine}`,
+        twilio_number: twilioFrom,
+        send_at: sendAt.toISOString(),
+      } as Record<string, unknown>)
+      console.log('[RESERVA] Mensaje de reseña programado para:', sendAt.toISOString())
+    } else {
+      console.log('[RESERVA] Ya existe un mensaje pendiente, no se crea duplicado')
+    }
   }
 
   // Send WhatsApp notification to the customer
-  const restaurantName = r.restaurants.name.trim()
-  const twilioFrom = r.restaurants.whatsapp_number ?? process.env.TWILIO_WHATSAPP_NUMBER!
 
   let customerMsg: string | null = null
   if (status === 'confirmed') {
