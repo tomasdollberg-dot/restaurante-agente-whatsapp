@@ -38,7 +38,7 @@ export default function LandingPage() {
             <a href="#funcionalidades" className="nav-link">Funcionalidades</a>
             <a href="#precio" className="nav-link">Precio</a>
           </div>
-          <Link href="/register" className="nav-cta">Prueba gratis 14 días →</Link>
+          <Link href="/register" className="nav-cta" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Prueba gratis 14 días →</Link>
         </div>
       </nav>
 
@@ -54,7 +54,7 @@ export default function LandingPage() {
               Chispoa atiende el WhatsApp de tu restaurante mientras tú te encargas de lo esencial. Gestiona reservas, información sobre alérgenos y horarios al instante, durante las 24 horas del día.
             </div>
             <div className="hero-btns">
-              <Link href="/register" className="btn-main">Prueba gratis 14 días →</Link>
+              <Link href="/register" className="btn-main" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Prueba gratis 14 días →</Link>
               <a href="#como-funciona" className="btn-sec">Ver cómo funciona</a>
             </div>
             <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--naranja)', marginBottom: '32px' }}>
@@ -288,7 +288,7 @@ export default function LandingPage() {
                 <div className="pf">Panel de gestión desde el móvil</div>
                 <div className="pf">Configuración incluida — lo hacemos nosotros</div>
               </div>
-              <Link href="/register" className="price-cta">Empieza ahora →</Link>
+              <Link href="/register" className="price-cta" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Empieza ahora →</Link>
               <div className="price-note">Sin coste de alta · Activo en 48 horas · Primer mes sin compromiso</div>
             </div>
             <div className="price-right">
@@ -308,7 +308,7 @@ export default function LandingPage() {
         <div className="cta-final rev">
           <div className="ctaf-title">TU RESTAURANTE,<br />SIEMPRE ENCENDIDO.</div>
           <div className="ctaf-sub">Empieza hoy. Sin permanencia. Sin tecnicismos. Solo más reservas y más reseñas.</div>
-          <Link href="/register" className="ctaf-btn">Empieza en 48h →</Link>
+          <Link href="/register" className="ctaf-btn" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Empieza en 48h →</Link>
           <div className="ctaf-note">150€/mes + IVA · Cancela cuando quieras · Sin coste de alta</div>
         </div>
       </div>

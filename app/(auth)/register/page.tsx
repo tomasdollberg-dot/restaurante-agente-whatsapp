@@ -92,6 +92,9 @@ export default function RegisterPage() {
 
     localStorage.setItem('pending_restaurant_name', form.restaurantName)
     localStorage.setItem('pending_owner_phone', form.ownerPhone)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'StartTrial', { value: 150, currency: 'EUR' })
+    }
     setRegistered(true)
     setLoading(false)
   }
