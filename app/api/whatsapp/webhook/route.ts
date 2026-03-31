@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateRequest } from 'twilio'
 import { createClient } from '@supabase/supabase-js'
 import { processMessage } from '@/lib/agent'
 import { sendWhatsAppMessage } from '@/lib/twilio'
@@ -24,12 +25,22 @@ function getServiceClient() {
 
 export async function POST(request: NextRequest) {
   try {
-    // Twilio envía application/x-www-form-urlencoded — parsear con URLSearchParams
+    // Validar firma Twilio antes de cualquier lógica
+    const signature = request.headers.get('x-twilio-signature') ?? ''
     const rawBody = await request.text()
     const params = new URLSearchParams(rawBody)
+    const paramsObj = Object.fromEntries(params)
+    const isValid = validateRequest(
+      process.env.TWILIO_AUTH_TOKEN!,
+      signature,
+      'https://chispoa-ia.vercel.app/api/whatsapp/webhook',
+      paramsObj
+    )
+    if (!isValid) return new NextResponse('Forbidden', { status: 403 })
+
     const from = params.get('From')
     const to = params.get('To')
-    const body = params.get('Body')
+    const body = (params.get('Body') ?? '').slice(0, 2000)
 
     console.log('[WEBHOOK] Mensaje recibido:', { from, to, body })
 
