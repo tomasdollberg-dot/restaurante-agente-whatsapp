@@ -53,35 +53,33 @@ export async function updateReservationStatus(id: string, status: ReservationSta
       console.log('[RESERVA] Reserva anterior cancelada por modificación:', (previousReservation as Record<string, unknown>).id)
     }
 
-    // Schedule review message only when confirming, avoiding duplicates
-    const { data: existingScheduled } = await supabase
-      .from('scheduled_messages')
-      .select('id')
-      .eq('restaurant_id', r.restaurant_id)
-      .eq('customer_phone', r.customer_phone)
-      .eq('sent', false)
-      .limit(1)
-      .maybeSingle()
+    // Programar mensaje de reseña — el índice único parcial (restaurant_id, customer_phone) WHERE sent=false
+    // previene duplicados a nivel de BD incluso ante inserciones concurrentes
+    const reservationDateTime = new Date(`${r.reservation_date}T${r.reservation_time}`)
+    const hoursToAdd = r.reservation_time < '17:00:00' ? 3 : 14
+    const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
 
-    if (!existingScheduled) {
-      const reservationDateTime = new Date(`${r.reservation_date}T${r.reservation_time}`)
-      const hoursToAdd = r.reservation_time < '17:00:00' ? 3 : 14
-      const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
+    const mapsLine = r.restaurants.google_maps_url
+      ? `\n\nSi quieres dejarnos una reseña o valoración, nos ayudaría muchísimo: ${r.restaurants.google_maps_url}`
+      : ''
 
-      const mapsLine = r.restaurants.google_maps_url
-        ? `\n\nSi quieres dejarnos una reseña o valoración, nos ayudaría muchísimo: ${r.restaurants.google_maps_url}`
-        : ''
+    const { error: scheduleError } = await supabase.from('scheduled_messages').insert({
+      restaurant_id: r.restaurant_id,
+      customer_phone: r.customer_phone,
+      message: `¡Nos encantó haberte visto, ${r.customer_name}! Esperamos volver a recibirte pronto.${mapsLine}`,
+      twilio_number: twilioFrom,
+      send_at: sendAt.toISOString(),
+    } as Record<string, unknown>)
 
-      await supabase.from('scheduled_messages').insert({
-        restaurant_id: r.restaurant_id,
-        customer_phone: r.customer_phone,
-        message: `¡Nos encantó haberte visto, ${r.customer_name}! Esperamos volver a recibirte pronto.${mapsLine}`,
-        twilio_number: twilioFrom,
-        send_at: sendAt.toISOString(),
-      } as Record<string, unknown>)
-      console.log('[RESERVA] Mensaje de reseña programado para:', sendAt.toISOString())
+    if (scheduleError) {
+      // código 23505 = unique_violation — duplicado prevenido por el índice parcial único
+      if (scheduleError.code === '23505') {
+        console.log('[RESERVA] Duplicado prevenido por constraint único:', r.customer_phone)
+      } else {
+        console.error('[RESERVA] Error insertando scheduled_message:', scheduleError.message)
+      }
     } else {
-      console.log('[RESERVA] Ya existe un mensaje pendiente, no se crea duplicado')
+      console.log('[RESERVA] Mensaje de reseña programado para:', sendAt.toISOString())
     }
   }
 
