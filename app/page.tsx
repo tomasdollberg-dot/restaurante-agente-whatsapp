@@ -70,7 +70,7 @@ export default function LandingPage() {
                 <div className="stat-l">siempre<br />disponible</div>
               </div>
               <div>
-                <div className="stat-n"><span>48</span>h</div>
+                <div className="stat-n"><span>72</span>h</div>
                 <div className="stat-l">activación con<br />aprobación incluida</div>
               </div>
             </div>
@@ -125,8 +125,8 @@ export default function LandingPage() {
             <div className="step">
               <div className="step-n">PASO 02</div>
               <span className="step-icon">⚡</span>
-              <div className="step-title">Activamos tu número en 48h</div>
-              <div className="step-body">Configuramos tu número de WhatsApp Business. Sin que toques nada técnico. En dos días tu restaurante ya tiene un agente que responde.</div>
+              <div className="step-title">Activamos tu número en 72h</div>
+              <div className="step-body">Configuramos tu número de WhatsApp Business. Sin que toques nada técnico. En tres días tu restaurante ya tiene un agente que responde.</div>
             </div>
             <div className="step">
               <div className="step-n">PASO 03</div>
@@ -242,7 +242,7 @@ export default function LandingPage() {
             <div className="fg-text">
               Que el teléfono suene<br />ya <span className="hi">no es tu problema.</span>
             </div>
-            <div className="fg-badge">150€/mes<br />Sin permanencia<br />Activo en 48h</div>
+            <div className="fg-badge">150€/mes<br />Sin permanencia<br />Activo en 72h</div>
           </div>
         </section>
 
@@ -289,16 +289,16 @@ export default function LandingPage() {
                 <div className="pf">Configuración incluida — lo hacemos nosotros</div>
               </div>
               <Link href="/register" className="price-cta" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Empieza ahora →</Link>
-              <div className="price-note">Sin coste de alta · Activo en 48 horas · Primer mes sin compromiso</div>
+              <div className="price-note">Sin coste de alta · Activo en 72 horas · Primer mes sin compromiso</div>
             </div>
             <div className="price-right">
-              <div className="pr-title">Activo en <span>48 horas.</span><br />Sin que toques nada técnico.</div>
+              <div className="pr-title">Activo en <span>72 horas.</span><br />Sin que toques nada técnico.</div>
               <div className="pr-body">Te registras, nos das la información de tu restaurante y nosotros nos encargamos de todo lo demás. No necesitas saber qué es WhatsApp Business API ni cómo funciona. Solo dinos tu menú y tus horarios.</div>
               <div className="pr-steps">
                 <div className="prs"><div className="prs-n">1</div>Te registras en chispoa.com en 5 minutos</div>
                 <div className="prs"><div className="prs-n">2</div>Introduces tu menú, horarios y Google Maps</div>
                 <div className="prs"><div className="prs-n">3</div>Nosotros configuramos el número de WhatsApp</div>
-                <div className="prs"><div className="prs-n">4</div>En 48h tu agente está respondiendo clientes</div>
+                <div className="prs"><div className="prs-n">4</div>En 72h tu agente está respondiendo clientes</div>
               </div>
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function LandingPage() {
         <div className="cta-final rev">
           <div className="ctaf-title">TU RESTAURANTE,<br />SIEMPRE ENCENDIDO.</div>
           <div className="ctaf-sub">Empieza hoy. Sin permanencia. Sin tecnicismos. Solo más reservas y más reseñas.</div>
-          <Link href="/register" className="ctaf-btn" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Empieza en 48h →</Link>
+          <Link href="/register" className="ctaf-btn" onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) { (window as any).fbq('track', 'Lead') } }}>Empieza en 72h →</Link>
           <div className="ctaf-note">150€/mes + IVA · Cancela cuando quieras · Sin coste de alta</div>
         </div>
       </div>
