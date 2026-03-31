@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const isValid = validateRequest(
       process.env.TWILIO_AUTH_TOKEN!,
       signature,
-      'https://chispoa-ia.vercel.app/api/whatsapp/webhook',
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/whatsapp/webhook`,
       paramsObj
     )
     if (!isValid) return new NextResponse('Forbidden', { status: 403 })
@@ -163,6 +163,17 @@ export async function POST(request: NextRequest) {
         await sendWhatsAppMessage(
           customerPhone,
           'En ese horario no tenemos servicio. Puedes consultarnos los horarios disponibles.',
+          twilioNumber
+        )
+        return new NextResponse('', { status: 200 })
+      }
+
+      // Validar número de personas
+      if (!r.partySize || r.partySize < 1 || r.partySize > 50) {
+        console.log('[WEBHOOK] party_size inválido, rechazando reserva:', r.partySize)
+        await sendWhatsAppMessage(
+          customerPhone,
+          '¿Para cuántas personas sería la reserva?',
           twilioNumber
         )
         return new NextResponse('', { status: 200 })
