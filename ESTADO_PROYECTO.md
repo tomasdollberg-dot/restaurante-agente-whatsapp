@@ -1,7 +1,25 @@
 # Estado del Proyecto — Chispoa
 
+> **Este archivo está desactualizado. Ver [ESTADO_PROYECTO_V2.md](./ESTADO_PROYECTO_V2.md) para el estado actual.**
+
 Agente IA para restaurantes que gestiona reservas por WhatsApp usando Claude, Twilio y Supabase.
 URL de producción: `https://chispoa-ia.vercel.app`
+
+---
+
+## Changelog desde v1
+
+### 2026-03-30 / 31
+- **Seguridad**: Validación de firma Twilio (`validateRequest`) en el webhook — rechaza peticiones no autorizadas con 403
+- **Seguridad**: Truncado de input del cliente a 2000 caracteres antes de pasarlo al agente
+- **Seguridad**: Headers HTTP añadidos en `next.config.js`: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`
+- **Modelo IA**: Configurable vía `ANTHROPIC_MODEL` env var (por defecto `claude-sonnet-4-20250514`)
+- **Reservas**: Mensaje de reseña ahora se crea solo al **confirmar** la reserva, no al crearla como pending
+- **Reservas**: Anti-duplicados en `scheduled_messages` (verifica `sent=false` antes de insertar)
+- **Cron**: Campo `retry_count` añadido a `scheduled_messages` — descarta mensajes con ≥ 3 intentos fallidos
+- **Cron**: Columna `retry_count INTEGER DEFAULT 0` añadida a la tabla `scheduled_messages` (SQL ejecutado en Supabase)
+- **Paginación**: Reservas limitadas a 50 por carga con botón "Cargar más" en el dashboard
+- **Health check**: Endpoint `GET /api/health` que verifica conectividad con Supabase
 
 ---
 
