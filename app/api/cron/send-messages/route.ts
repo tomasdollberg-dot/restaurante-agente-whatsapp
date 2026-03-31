@@ -37,6 +37,13 @@ export async function GET(request: NextRequest) {
   let failed = 0
 
   for (const msg of messages) {
+    if (msg.retry_count >= 3) {
+      console.error(`[CRON] Máximo de reintentos alcanzado para ${msg.customer_phone}, descartando mensaje ${msg.id}`)
+      await supabase.from('scheduled_messages').update({ sent: true } as Record<string, unknown>).eq('id', msg.id)
+      failed++
+      continue
+    }
+
     try {
       await sendWhatsAppMessage(msg.customer_phone, msg.message, msg.twilio_number)
       await supabase.from('scheduled_messages').update({ sent: true, sent_at: new Date().toISOString() } as Record<string, unknown>).eq('id', msg.id)
@@ -44,7 +51,8 @@ export async function GET(request: NextRequest) {
       console.log(`[CRON] Enviado a ${msg.customer_phone}`)
     } catch (err) {
       failed++
-      console.error(`[CRON] Error enviando a ${msg.customer_phone}:`, err)
+      console.error(`[CRON] Error enviando a ${msg.customer_phone} (intento ${msg.retry_count + 1}):`, err)
+      await supabase.from('scheduled_messages').update({ retry_count: msg.retry_count + 1 } as Record<string, unknown>).eq('id', msg.id)
     }
   }
 

@@ -23,8 +23,11 @@ export default async function ReservationsPage() {
     .eq('restaurant_id', restaurant.id)
     .order('reservation_date', { ascending: false })
     .order('reservation_time', { ascending: false })
+    .range(0, 50)
 
-  const reservations = (reservationsData ?? []) as Reservation[]
+  const allData = (reservationsData ?? []) as Reservation[]
+  const reservations = allData.slice(0, 50)
+  const hasMore = allData.length > 50
 
   return (
     <div className="space-y-6">
@@ -34,7 +37,7 @@ export default async function ReservationsPage() {
           Gestiona las reservas recibidas por WhatsApp
         </p>
       </div>
-      <ReservationsClient reservations={reservations} />
+      <ReservationsClient reservations={reservations} hasMore={hasMore} restaurantId={restaurant.id} />
     </div>
   )
 }

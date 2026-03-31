@@ -70,6 +70,7 @@ export interface ScheduledMessage {
   twilio_number: string
   send_at: string
   sent: boolean
+  retry_count: number
   created_at: string
 }
 

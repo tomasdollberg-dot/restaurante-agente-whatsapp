@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Plus, Users } from 'lucide-react'
 import { ReservationCard } from '@/components/dashboard/reservation-card'
 import { NewReservationDialog } from './new-reservation-dialog'
+import { loadMoreReservations } from '@/app/(dashboard)/dashboard/reservations/actions'
 import type { Reservation } from '@/lib/supabase/types'
 
 type Filter = 'all' | 'pending' | 'confirmed'
@@ -15,8 +16,19 @@ const filterBtns: { key: Filter; label: string }[] = [
   { key: 'confirmed', label: 'Confirmadas' },
 ]
 
-export function ReservationsClient({ reservations }: { reservations: Reservation[] }) {
+export function ReservationsClient({
+  reservations: initialReservations,
+  hasMore: initialHasMore,
+  restaurantId,
+}: {
+  reservations: Reservation[]
+  hasMore: boolean
+  restaurantId: string
+}) {
   const router = useRouter()
+  const [reservations, setReservations] = useState<Reservation[]>(initialReservations)
+  const [hasMore, setHasMore] = useState(initialHasMore)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [filter, setFilter] = useState<Filter>('all')
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -26,6 +38,14 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
     }, 7200000)
     return () => clearInterval(interval)
   }, [router])
+
+  async function handleLoadMore() {
+    setLoadingMore(true)
+    const result = await loadMoreReservations(restaurantId, reservations.length)
+    setReservations((prev) => [...prev, ...result.reservations])
+    setHasMore(result.hasMore)
+    setLoadingMore(false)
+  }
 
   const filtered =
     filter === 'all' ? reservations : reservations.filter((r) => r.status === filter)
@@ -74,6 +94,16 @@ export function ReservationsClient({ reservations }: { reservations: Reservation
             {filtered.map((r) => (
               <ReservationCard key={r.id} reservation={r} showDate />
             ))}
+            {hasMore && filter === 'all' && (
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="w-full py-3 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+                style={{ backgroundColor: 'rgba(15,12,8,0.06)', color: '#6b7280' }}
+              >
+                {loadingMore ? 'Cargando...' : 'Cargar más'}
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -142,6 +142,35 @@ export async function updateReservationStatus(id: string, status: ReservationSta
   return { success: true }
 }
 
+export async function loadMoreReservations(restaurantId: string, offset: number): Promise<{ reservations: Reservation[], hasMore: boolean }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { reservations: [], hasMore: false }
+
+  // Verify ownership before fetching
+  const { data: restaurantData } = await supabase
+    .from('restaurants')
+    .select('id')
+    .eq('id', restaurantId)
+    .eq('owner_id', user.id)
+    .single()
+  if (!restaurantData) return { reservations: [], hasMore: false }
+
+  const { data } = await supabase
+    .from('reservations')
+    .select('*')
+    .eq('restaurant_id', restaurantId)
+    .order('reservation_date', { ascending: false })
+    .order('reservation_time', { ascending: false })
+    .range(offset, offset + 50)
+
+  const items = (data ?? []) as Reservation[]
+  return {
+    reservations: items.slice(0, 50),
+    hasMore: items.length > 50,
+  }
+}
+
 export async function createReservation(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
