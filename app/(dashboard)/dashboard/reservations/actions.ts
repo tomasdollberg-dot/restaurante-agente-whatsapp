@@ -83,6 +83,16 @@ export async function updateReservationStatus(id: string, status: ReservationSta
     }
   }
 
+  if (status === 'cancelled') {
+    await supabase
+      .from('scheduled_messages')
+      .delete()
+      .eq('restaurant_id', r.restaurant_id)
+      .eq('customer_phone', r.customer_phone)
+      .eq('sent', false)
+    console.log('[RESERVA] Scheduled messages eliminados por cancelación')
+  }
+
   // Send WhatsApp notification to the customer
 
   let customerMsg: string | null = null
