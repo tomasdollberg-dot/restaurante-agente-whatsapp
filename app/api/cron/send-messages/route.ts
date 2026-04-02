@@ -45,9 +45,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Marcar sent=true ANTES de enviar — previene que ejecuciones paralelas procesen el mismo mensaje
-    await supabase.from('scheduled_messages')
+    const { error: updateError } = await supabase.from('scheduled_messages')
       .update({ sent: true, sent_at: new Date().toISOString() } as Record<string, unknown>)
       .eq('id', msg.id)
+
+    if (updateError) {
+      console.error(`[CRON] Error marcando sent=true para ${msg.id}:`, updateError.message)
+      failed++
+      continue
+    }
+    console.log('[CRON] Marcado como sent:', msg.id)
 
     try {
       await sendWhatsAppMessage(msg.customer_phone, msg.message, msg.twilio_number)
@@ -57,9 +64,12 @@ export async function GET(request: NextRequest) {
       failed++
       console.error(`[CRON] Error enviando a ${msg.customer_phone} (intento ${msg.retry_count + 1}):`, err)
       // Revertir sent=false para que el próximo cron lo reintente, e incrementar retry_count
-      await supabase.from('scheduled_messages')
+      const { error: revertError } = await supabase.from('scheduled_messages')
         .update({ sent: false, retry_count: msg.retry_count + 1 } as Record<string, unknown>)
         .eq('id', msg.id)
+      if (revertError) {
+        console.error(`[CRON] Error revirtiendo sent=false para ${msg.id}:`, revertError.message)
+      }
     }
   }
 
