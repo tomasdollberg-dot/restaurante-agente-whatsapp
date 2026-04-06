@@ -12,13 +12,14 @@ function isRestaurantOpen(hours: RestaurantHours[], date: string, time: string):
   if (!dayHours || dayHours.is_closed) return false
   const normalizeTime = (t: string) => t.length === 4 ? '0' + t : t
   const timeNorm = normalizeTime(time)
-  const open = dayHours.open_time?.slice(0, 5)
-  const close = dayHours.close_time?.slice(0, 5)
+  const open = normalizeTime(dayHours.open_time?.slice(0, 5) ?? '')
+  const close = dayHours.close_time?.slice(0, 5) === '00:00' ? '24:00' : normalizeTime(dayHours.close_time?.slice(0, 5) ?? '')
   if (!open || !close) return false
   const open2 = dayHours.open_time_2?.slice(0, 5)
-  const close2 = dayHours.close_time_2?.slice(0, 5)
+  const close2Raw = dayHours.close_time_2?.slice(0, 5)
+  const close2 = close2Raw === '00:00' ? '24:00' : (close2Raw ? normalizeTime(close2Raw) : undefined)
   return (timeNorm >= open && timeNorm <= close) ||
-         (!!open2 && !!close2 && timeNorm >= open2 && timeNorm <= close2)
+         (!!open2 && !!close2 && timeNorm >= normalizeTime(open2) && timeNorm <= close2)
 }
 
 function getServiceClient() {
