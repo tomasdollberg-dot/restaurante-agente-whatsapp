@@ -43,6 +43,11 @@ function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[], hours: Rest
   const today = new Date()
   const todayFormatted = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
   const todayISO = today.toISOString().split('T')[0]
+  const tomorrowISO = new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const nowTimeUTC = today.toISOString().slice(11, 16)
+  // Hora española aproximada (UTC+2 verano, UTC+1 invierno) — solo para mesa inmediata
+  const spainOffsetMs = (today.getMonth() >= 2 && today.getMonth() <= 9) ? 2 * 3600000 : 1 * 3600000
+  const nowTimeSpain = new Date(today.getTime() + spainOffsetMs).toISOString().slice(11, 16)
   const menuText = formatMenuForPrompt(menu)
   const hoursText = formatHoursForPrompt(hours)
 
@@ -79,6 +84,20 @@ Solo esa frase exacta, seguida del token: [NOTIFICAR_DUENO: <motivo breve>]
 1. Si no sabes su nombre, pregúntaselo.
 2. Cuando tengas nombre, fecha y hora, confirma: "Vamos a procesar la cancelación de tu reserva."
 3. Emite el token: [CANCELAR_RESERVA: nombre="X" fecha="YYYY-MM-DD" hora="HH:MM"]
+
+**REFERENCIAS TEMPORALES**: La fecha de hoy es ${todayISO} y mañana es ${tomorrowISO}. Interpreta correctamente estas expresiones:
+- "esta noche" → fecha hoy (${todayISO}), pregunta la hora si no la especifica
+- "hoy a mediodía" / "al mediodía" → fecha hoy (${todayISO}), turno de mediodía
+- "mañana" → fecha ${tomorrowISO}
+- "este fin de semana" → pregunta si sábado o domingo
+- "la semana que viene" → pregunta qué día exacto
+Si el cliente usa una referencia temporal sin especificar hora, pregunta la hora antes de continuar.
+
+**MESA INMEDIATA**: Si el cliente pregunta "¿tienes mesa ahora?", "¿hay sitio ahora?", "¿podemos ir ahora?" o expresiones similares de disponibilidad inmediata:
+- Responde: "Puedo gestionar tu solicitud. ¿Para cuántas personas sería?"
+- Recoge nombre y número de personas (la hora será ${nowTimeSpain} y la fecha hoy ${todayISO})
+- Cuando tengas nombre y personas, emite: [CREAR_RESERVA: nombre="X" fecha="${todayISO}" hora="${nowTimeSpain}" personas=N notas="mesa inmediata"]
+- Emite también: [NOTIFICAR_DUENO: cliente quiere mesa inmediata para X personas]
 
 **Saludos y mensajes ambiguos**: Si el cliente envía solo un saludo ("hola", "buenas", "hey", "buenos días", "buenas noches", "buenas tardes") sin ninguna intención clara, responde con un saludo natural y breve preguntando en qué puedes ayudarle. Ejemplo: "Hola, soy el asistente de ${restaurant.name}. ¿En qué te puedo ayudar?" No asumas que quiere reservar. Espera a que el cliente indique qué necesita.
 
