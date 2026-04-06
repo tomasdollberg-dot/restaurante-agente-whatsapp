@@ -10,10 +10,15 @@ function isRestaurantOpen(hours: RestaurantHours[], date: string, time: string):
   const dayOfWeek = new Date(`${date}T12:00:00`).getDay()
   const dayHours = hours.find((h) => h.day_of_week === dayOfWeek)
   if (!dayHours || dayHours.is_closed) return false
+  const normalizeTime = (t: string) => t.length === 4 ? '0' + t : t
+  const timeNorm = normalizeTime(time)
   const open = dayHours.open_time?.slice(0, 5)
   const close = dayHours.close_time?.slice(0, 5)
   if (!open || !close) return false
-  return time >= open && time <= close
+  const open2 = dayHours.open_time_2?.slice(0, 5)
+  const close2 = dayHours.close_time_2?.slice(0, 5)
+  return (timeNorm >= open && timeNorm <= close) ||
+         (!!open2 && !!close2 && timeNorm >= open2 && timeNorm <= close2)
 }
 
 function getServiceClient() {
