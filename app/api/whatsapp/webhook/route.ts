@@ -256,38 +256,44 @@ export async function POST(request: NextRequest) {
 
       const { data: reservationToCancel } = await supabase
         .from('reservations')
-        .select('id')
+        .select('id, reservation_date, reservation_time, customer_name')
         .eq('restaurant_id', restaurant.id)
         .eq('customer_phone', customerPhone)
-        .eq('reservation_date', c.date)
-        .eq('reservation_time', c.time)
+        .ilike('customer_name', `%${c.name}%`)
         .in('status', ['pending', 'confirmed'])
+        .order('reservation_date', { ascending: true })
+        .order('reservation_time', { ascending: true })
         .limit(1)
         .maybeSingle()
 
       if (reservationToCancel) {
+        const cancelled = reservationToCancel as Record<string, unknown>
         await supabase
           .from('reservations')
           .update({ status: 'cancelled' })
-          .eq('id', (reservationToCancel as Record<string, unknown>).id)
+          .eq('id', cancelled.id)
 
-        // Eliminar mensaje de agradecimiento programado pendiente
+        // Eliminar mensajes programados pendientes para este cliente
         await supabase
           .from('scheduled_messages')
           .delete()
-          .eq('restaurant_id', restaurant.id)
           .eq('customer_phone', customerPhone)
           .eq('sent', false)
-          .gt('send_at', new Date().toISOString())
 
         if (restaurant.owner_phone) {
           await sendWhatsAppMessage(
             restaurant.owner_phone,
-            `*Chispoa* — Cancelación de reserva:\n\n👤 ${c.name}\n📅 ${c.date} a las ${c.time}\n\nEl cliente ha cancelado su reserva.`,
+            `*Chispoa* — ${cancelled.customer_name} ha cancelado su reserva del ${cancelled.reservation_date} a las ${cancelled.reservation_time}.`,
             twilioNumber
           )
           console.log('[WEBHOOK] Dueño notificado de cancelación de reserva')
         }
+      } else {
+        await sendWhatsAppMessage(
+          customerPhone,
+          `No encontré ninguna reserva a nombre de ${c.name}. ¿Puedes confirmar el nombre con el que hiciste la reserva?`,
+          twilioNumber
+        )
       }
       console.log('[WEBHOOK] Reserva cancelada:', reservationToCancel ? 'OK' : 'no encontrada')
     }
