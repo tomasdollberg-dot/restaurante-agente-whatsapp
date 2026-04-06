@@ -26,11 +26,25 @@ function formatMenuForPrompt(items: MenuItem[]): string {
     .join('\n\n')
 }
 
-function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[]): string {
+function formatHoursForPrompt(hours: RestaurantHours[]): string {
+  if (!hours.length) return 'Horarios no configurados.'
+  const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+  const sorted = [...hours].sort((a, b) => a.day_of_week - b.day_of_week)
+  return sorted.map((h) => {
+    const day = dayNames[h.day_of_week]
+    if (h.is_closed) return `${day}: Cerrado`
+    const shift1 = h.open_time && h.close_time ? `${h.open_time.slice(0, 5)}–${h.close_time.slice(0, 5)}` : ''
+    const shift2 = h.open_time_2 && h.close_time_2 ? ` y ${h.open_time_2.slice(0, 5)}–${h.close_time_2.slice(0, 5)}` : ''
+    return `${day}: ${shift1}${shift2}`
+  }).join('\n')
+}
+
+function buildSystemPrompt(restaurant: Restaurant, menu: MenuItem[], hours: RestaurantHours[]): string {
   const today = new Date()
   const todayFormatted = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
   const todayISO = today.toISOString().split('T')[0]
   const menuText = formatMenuForPrompt(menu)
+  const hoursText = formatHoursForPrompt(hours)
 
   return `Hoy es ${todayFormatted} (${todayISO}).
 
@@ -40,6 +54,10 @@ Eres el asistente de WhatsApp de ${restaurant.name}. Respondes de forma breve y 
 
 ## INFORMACIÓN DEL RESTAURANTE
 ${menuText}
+
+## HORARIOS DE APERTURA
+${hoursText}
+Usa esta información SOLO para informar al cliente cuando te pregunten los horarios. NO uses esta información para decidir si una reserva es válida — eso lo gestiona el sistema automáticamente.
 
 ## REGLAS DE COMPORTAMIENTO
 
@@ -96,7 +114,7 @@ export async function processMessage(
   hours: RestaurantHours[],
   history: ConversationMessage[]
 ): Promise<AgentResponse> {
-  const systemPrompt = buildSystemPrompt(restaurant, menu)
+  const systemPrompt = buildSystemPrompt(restaurant, menu, hours)
 
   const messages: Anthropic.Messages.MessageParam[] = [
     ...history.slice(-10).map((m) => ({
