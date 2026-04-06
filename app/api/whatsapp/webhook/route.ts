@@ -200,6 +200,31 @@ export async function POST(request: NextRequest) {
           )
           console.log('[WEBHOOK] Dueño notificado de nueva reserva en:', restaurant.owner_phone)
         }
+
+        // Programar mensaje de confirmación 23h después para extender ventana WhatsApp 24h
+        const reservationDtSpain = new Date(`${r.date}T${r.time}:00+02:00`)
+        let confirmSendAt = new Date(reservationDtSpain.getTime() + 23 * 60 * 60 * 1000)
+        // Evitar franja nocturna 21:00-09:00 hora española (UTC+2)
+        const spainHour = (confirmSendAt.getUTCHours() + 2) % 24
+        if (spainHour >= 21 || spainHour < 9) {
+          // Mover al siguiente día a las 09:00 Spain = 07:00 UTC
+          const adjusted = new Date(confirmSendAt)
+          adjusted.setUTCHours(7, 0, 0, 0)
+          if (adjusted <= confirmSendAt) adjusted.setUTCDate(adjusted.getUTCDate() + 1)
+          confirmSendAt = adjusted
+        }
+        const confirmMessage = `Hola ${r.name}, te recordamos tu reserva en ${restaurant.name} el ${r.date} a las ${r.time}. ¿Confirmas tu asistencia? Responde SI o NO.`
+        const { error: confirmError } = await supabase.from('scheduled_messages').insert({
+          restaurant_id: restaurant.id,
+          customer_phone: customerPhone,
+          message: confirmMessage,
+          twilio_number: twilioNumberClean,
+          send_at: confirmSendAt.toISOString(),
+          sent: false,
+          retry_count: 0,
+          type: 'confirmation',
+        } as Record<string, unknown>)
+        console.log('[WEBHOOK] Mensaje de confirmación programado para:', confirmSendAt.toISOString(), confirmError ? 'ERROR: ' + confirmError.message : 'OK')
       }
     }
 

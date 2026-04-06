@@ -71,6 +71,7 @@ export interface ScheduledMessage {
   send_at: string
   sent: boolean
   retry_count: number
+  type: string
   created_at: string
 }
 
