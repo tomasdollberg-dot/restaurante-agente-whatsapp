@@ -209,28 +209,30 @@ export async function POST(request: NextRequest) {
 
         // Programar mensaje de confirmación para extender ventana WhatsApp 24h
         let confirmSendAt: Date | null = null
+        const now = new Date()
         const reservationDtSpain = new Date(`${r.date}T${r.time}:00+02:00`)
-        if (r.date === todayISO) {
-          // Reserva hoy: enviar 1h antes de la hora de la reserva
-          const candidate = new Date(reservationDtSpain.getTime() - 60 * 60 * 1000)
-          const now = new Date()
-          if (candidate.getTime() - now.getTime() >= 60 * 60 * 1000) {
-            confirmSendAt = candidate
+        const twoHoursBefore = new Date(reservationDtSpain.getTime() - 2 * 60 * 60 * 1000)
+
+        if (r.date < todayISO) {
+          // Reserva en el pasado — no crear mensaje
+        } else if (r.date === todayISO) {
+          // Reserva hoy: enviar 2h antes. Si ya pasó o falta menos de 2h, no crear
+          if (twoHoursBefore > now) {
+            confirmSendAt = twoHoursBefore
           }
-          // Si ya pasó o falta menos de 1h → no crear el mensaje
         } else {
-          // Reserva futura: 23h después de la hora de la reserva
-          let candidate = new Date(reservationDtSpain.getTime() + 23 * 60 * 60 * 1000)
+          // Reserva futura: usar el menor de (23h desde ahora) y (2h antes de la reserva)
+          const twentyThreeHoursFromNow = new Date(now.getTime() + 23 * 60 * 60 * 1000)
+          let candidate = twentyThreeHoursFromNow < twoHoursBefore ? twentyThreeHoursFromNow : twoHoursBefore
           // Evitar franja nocturna 21:00-09:00 hora española (UTC+2)
           const spainHour = (candidate.getUTCHours() + 2) % 24
           if (spainHour >= 21 || spainHour < 9) {
-            // Mover al siguiente día a las 09:00 Spain = 07:00 UTC
-            const adjusted = new Date(candidate)
-            adjusted.setUTCHours(7, 0, 0, 0)
-            if (adjusted <= candidate) adjusted.setUTCDate(adjusted.getUTCDate() + 1)
-            candidate = adjusted
+            // Usar las 09:00 Spain del día de la reserva = 07:00 UTC
+            candidate = new Date(`${r.date}T07:00:00Z`)
           }
-          confirmSendAt = candidate
+          if (candidate > now) {
+            confirmSendAt = candidate
+          }
         }
         if (confirmSendAt) {
           const confirmMessage = `Hola ${r.name}, te recordamos tu reserva en ${restaurant.name} el ${r.date} a las ${r.time}. ¿Confirmas tu asistencia? Responde SI o NO.`
@@ -243,10 +245,11 @@ export async function POST(request: NextRequest) {
             sent: false,
             retry_count: 0,
             type: 'confirmation',
+            reservation_date: r.date,
           } as Record<string, unknown>)
           console.log('[WEBHOOK] Mensaje de confirmación programado para:', confirmSendAt.toISOString(), confirmError ? 'ERROR: ' + confirmError.message : 'OK')
         } else {
-          console.log('[WEBHOOK] Mensaje de confirmación omitido (reserva hoy, menos de 1h o ya pasó)')
+          console.log('[WEBHOOK] Mensaje de confirmación omitido (fecha pasada, menos de 2h o ya pasó)')
         }
       }
     }

@@ -19,11 +19,14 @@ export async function GET(request: NextRequest) {
 
   const supabase = getServiceClient()
 
+  const todayISO = new Date().toISOString().split('T')[0]
+
   const { data, error } = await supabase
     .from('scheduled_messages')
     .select('*')
     .eq('sent', false)
     .lte('send_at', new Date().toISOString())
+    .or(`type.neq.confirmation,reservation_date.gte.${todayISO}`)
 
   if (error) {
     console.error('[CRON] Error consultando mensajes:', error.message)
