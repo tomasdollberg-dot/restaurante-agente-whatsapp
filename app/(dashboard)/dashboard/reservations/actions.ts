@@ -55,7 +55,7 @@ export async function updateReservationStatus(id: string, status: ReservationSta
 
     // Programar mensaje de reseña — el índice único parcial (restaurant_id, customer_phone) WHERE sent=false
     // previene duplicados a nivel de BD incluso ante inserciones concurrentes
-    const reservationDateTime = new Date(`${r.reservation_date}T${r.reservation_time}`)
+    const reservationDateTime = new Date(`${r.reservation_date}T${r.reservation_time}+02:00`)
     const hoursToAdd = r.reservation_time < '17:00:00' ? 3 : 14
     const sendAt = new Date(reservationDateTime.getTime() + hoursToAdd * 60 * 60 * 1000)
 
@@ -69,6 +69,8 @@ export async function updateReservationStatus(id: string, status: ReservationSta
       message: `¡Nos encantó haberte visto, ${r.customer_name}! Esperamos volver a recibirte pronto.${mapsLine}`,
       twilio_number: twilioFrom,
       send_at: sendAt.toISOString(),
+      type: 'review',
+      reservation_date: r.reservation_date,
     } as Record<string, unknown>)
 
     if (scheduleError) {
