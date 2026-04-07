@@ -19,21 +19,31 @@ export async function GET(request: NextRequest) {
 
   const supabase = getServiceClient()
 
-  const todayISO = new Date().toISOString().split('T')[0]
+  const nowISO = new Date().toISOString()
+  const todayISO = nowISO.split('T')[0]
 
-  const { data, error } = await supabase
+  const { data: reviewData, error: reviewError } = await supabase
     .from('scheduled_messages')
     .select('*')
+    .eq('type', 'review')
     .eq('sent', false)
-    .lte('send_at', new Date().toISOString())
-    .or(`type.neq.confirmation,reservation_date.gte.${todayISO}`)
+    .lte('send_at', nowISO)
 
+  const { data: confirmData, error: confirmError } = await supabase
+    .from('scheduled_messages')
+    .select('*')
+    .eq('type', 'confirmation')
+    .eq('sent', false)
+    .lte('send_at', nowISO)
+    .gte('reservation_date', todayISO)
+
+  const error = reviewError || confirmError
   if (error) {
     console.error('[CRON] Error consultando mensajes:', error.message)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const messages = (data ?? []) as ScheduledMessage[]
+  const messages = [...(reviewData ?? []), ...(confirmData ?? [])] as ScheduledMessage[]
   console.log(`[CRON] Mensajes pendientes: ${messages.length}`)
 
   let sent = 0
