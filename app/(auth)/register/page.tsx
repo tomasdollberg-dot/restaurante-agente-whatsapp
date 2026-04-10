@@ -95,6 +95,14 @@ export default function RegisterPage() {
     if (typeof window !== 'undefined' && (window as any).fbq) {
       (window as any).fbq('track', 'StartTrial', { value: 150, currency: 'EUR' })
     }
+    await fetch('/api/notify-new-restaurant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        restaurantName: form.restaurantName,
+        ownerEmail: form.email
+      })
+    })
     setRegistered(true)
     setLoading(false)
   }
