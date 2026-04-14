@@ -83,6 +83,16 @@ export async function POST(request: NextRequest) {
       return new NextResponse('', { status: 200 })
     }
 
+    // Detectar si quien escribe es el dueño del restaurante
+    if (customerPhone === restaurant.owner_phone) {
+      await sendWhatsAppMessage(
+        customerPhone,
+        `¡Buena jornada! El agente de ${restaurant.name} está activo y listo para atender a tus clientes.`,
+        twilioNumber
+      )
+      return new NextResponse('', { status: 200 })
+    }
+
     // 2. Obtener menú y horarios del restaurante
     const [{ data: menuData }, { data: hoursData }] = await Promise.all([
       supabase.from('menu_items').select('*').eq('restaurant_id', restaurant.id).eq('is_available', true),
