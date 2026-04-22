@@ -6,8 +6,9 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function POST(request: NextRequest) {
   try {
     const { restaurantName, ownerEmail } = await request.json()
+    console.log('[NOTIFY] Enviando notificación para:', restaurantName, ownerEmail)
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'Chispoa <onboarding@resend.dev>',
       to: 'tomas.dollberg@gmail.com',
       subject: `🎉 Nuevo registro — ${restaurantName}`,
@@ -25,10 +26,11 @@ export async function POST(request: NextRequest) {
         </div>
       `
     })
+    console.log('[NOTIFY] Resultado Resend:', JSON.stringify(result))
 
     return NextResponse.json({ ok: true })
   } catch (err) {
-    console.error('[NOTIFY] Error enviando notificación de registro:', err)
-    return NextResponse.json({ ok: false })
+    console.error('[NOTIFY] Error completo:', err)
+    return NextResponse.json({ ok: false, error: String(err) })
   }
 }
