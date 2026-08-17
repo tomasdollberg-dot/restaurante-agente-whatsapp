@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect } from 'react'
+import LossCalculator from '@/components/landing/LossCalculator'
 
 export default function LandingPage() {
   useEffect(() => {
@@ -271,9 +272,12 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* CALCULADORA */}
+        <LossCalculator />
+
         {/* PRECIO */}
         <section id="precio" className="rev">
-          <div className="sec-tag"><span className="n">05</span> Precio</div>
+          <div className="sec-tag"><span className="n">06</span> Precio</div>
           <div className="pricing-wrap">
             <div className="price-card">
               <div className="price-tag">Plan único · Todo incluido</div>
