@@ -29,6 +29,15 @@ function getServiceClient() {
   )
 }
 
+function getPublicWebhookUrl(request: NextRequest): string {
+  // Twilio firma con la URL pública exacta a la que llamó. Detrás del proxy de
+  // Vercel, esa URL viene en x-forwarded-host/x-forwarded-proto (no en NEXT_PUBLIC_APP_URL,
+  // que puede quedar desalineada si cambia el dominio y no se actualiza a mano).
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host')
+  const proto = request.headers.get('x-forwarded-proto') ?? 'https'
+  return `${proto}://${host}/api/whatsapp/webhook`
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Validar firma Twilio antes de cualquier lógica
@@ -36,13 +45,17 @@ export async function POST(request: NextRequest) {
     const rawBody = await request.text()
     const params = new URLSearchParams(rawBody)
     const paramsObj = Object.fromEntries(params)
+    const webhookUrl = getPublicWebhookUrl(request)
     const isValid = validateRequest(
       process.env.TWILIO_AUTH_TOKEN!,
       signature,
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/whatsapp/webhook`,
+      webhookUrl,
       paramsObj
     )
-    if (!isValid) return new NextResponse('Forbidden', { status: 403 })
+    if (!isValid) {
+      console.error('[WEBHOOK] Firma inválida. URL usada para validar:', webhookUrl)
+      return new NextResponse('Forbidden', { status: 403 })
+    }
 
     const from = params.get('From')
     const to = params.get('To')
