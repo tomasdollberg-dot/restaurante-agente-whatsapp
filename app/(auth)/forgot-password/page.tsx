@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
 
     const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://chispoa-ia.vercel.app/reset-password',
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
     })
 
     if (error) {
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
               onClick={async () => {
                 const supabase = createClient()
                 await supabase.auth.resetPasswordForEmail(email, {
-                  redirectTo: 'https://chispoa-ia.vercel.app/reset-password',
+                  redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`,
                 })
               }}
               className="font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity"

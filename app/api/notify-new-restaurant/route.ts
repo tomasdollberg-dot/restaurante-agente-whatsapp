@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
           </table>
           <br>
           <p style="color: #FF5C1A; font-weight: bold;">⏰ Tienes 72h para configurar el número de WhatsApp.</p>
-          <a href="https://chispoa-ia.vercel.app/dashboard" style="background: #FF5C1A; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; margin-top: 16px;">Ir al panel →</a>
+          <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard" style="background: #FF5C1A; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block; margin-top: 16px;">Ir al panel →</a>
         </div>
       `
     })
