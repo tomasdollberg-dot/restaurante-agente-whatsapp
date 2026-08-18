@@ -451,18 +451,19 @@ body::after {
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
-.calc-control { background: var(--crema); border-radius: 8px; padding: 28px; }
+.calc-control { background: var(--crema); border-radius: 8px; padding: 28px; min-width: 0; box-sizing: border-box; }
 .calc-label {
   display: block; font-size: 12px; font-weight: 600;
   color: var(--humo); margin-bottom: 18px;
 }
-.calc-stepper { display: flex; align-items: center; gap: 14px; }
+.calc-stepper { display: flex; align-items: center; gap: 14px; width: 100%; box-sizing: border-box; }
 .calc-step-btn {
   width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
   background: var(--negro); color: white; border: none;
   font-size: 18px; font-weight: 700; line-height: 1;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background 0.15s ease;
+  box-sizing: border-box;
 }
 .calc-step-btn:hover { background: var(--naranja); }
 .calc-step-btn:focus-visible { outline: 2px solid var(--naranja); outline-offset: 2px; }
@@ -472,6 +473,7 @@ body::after {
   color: var(--negro); background: transparent;
   border: none; border-bottom: 2px solid var(--arena);
   padding: 6px 4px; border-radius: 0;
+  box-sizing: border-box;
 }
 .calc-input::-webkit-outer-spin-button,
 .calc-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -570,8 +572,10 @@ body::after {
   .testimonials-grid { grid-template-columns: 1fr; }
 
   /* CALCULADORA */
+  #calculadora { padding-top: calc(32px + env(safe-area-inset-top, 0px)); }
   .calc-grid { grid-template-columns: 1fr; }
-  .calc-control, .calc-result { padding: 24px; }
+  .calc-control { padding: 18px 20px; }
+  .calc-result { padding: 24px; }
 
   /* FRASE GRANDE */
   .frase-grande { flex-direction: column; padding: 40px 28px; gap: 24px; }
